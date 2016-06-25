@@ -1,0 +1,6 @@
+node_modules/
+bower_components/
+main.min.js
+jquery.min.js
+main.css
+.sass-cache
