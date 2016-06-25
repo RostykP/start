@@ -10,7 +10,6 @@ var rename = require('gulp-rename');
 
 
 var js_arr = [
-    'node_modules/jquery/dist/jquery.min.js',
     'node_modules/bootstrap-daterangepicker/moment.js',
     'node_modules/bootstrap-daterangepicker/daterangepicker.js',
     'js/custom/*.js'
@@ -29,7 +28,11 @@ gulp.task('sass', function() {
         .pipe(sass())
         .pipe(gulp.dest('css'));
 });
-
+//Copy jquery
+gulp.task('copy-files', function () {
+    return gulp.src(['node_modules/jquery/dist/jquery.min.js'])
+        .pipe(gulp.dest('js/'));
+});
 
 
 
@@ -52,4 +55,4 @@ gulp.task('watch', function() {
 });
 
 // Default Task
-gulp.task('default', ['lint', 'sass', 'scripts', 'watch']);
+gulp.task('default', ['lint', 'copy-files','sass', 'scripts', 'watch']);
