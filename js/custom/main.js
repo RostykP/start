@@ -39,9 +39,10 @@
             timePicker12Hour: true,
             ranges: {
                 'Сьогодні': [moment(), moment()],
+				'Вчора': [moment().add(-1, 'days'), moment().add(-1, 'days')],
                 'Тиждень': [moment().startOf('week'), moment().endOf('week')],
-                'Місяць': [moment().startOf('month'), moment().endOf('month')],
-                'Рік': [moment().startOf('year'), moment().endOf('year')]
+                'Місяць': [moment().startOf('month'), moment().endOf('month')]
+                
             },
             opens: 'right',
             drops: 'down',
@@ -55,7 +56,7 @@
                 fromLabel: 'Від',
                 toLabel: 'До',
                 customRangeLabel: 'Період',
-                daysOfWeek: ['Нд', 'По', 'Вт', 'Ср', 'Чт', 'Пт','Сб'],
+                daysOfWeek: ['Нд', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт','Сб'],
                 monthNames: ['Січень', 'Лютий', 'Березень', 'Квітень', 'Травень', 'Червень', 'Липень', 'Серпень', 'Вересень', 'Жовтень', 'Листопад', 'Грудень'],
                 firstDay: 1
             }
