@@ -22,11 +22,49 @@
             }else{
                 alert(sid.msg);
             }
-
-
-
         });
-        $('input[name="daterange"]').daterangepicker({});
+
+        // var a= getResp({"sid":$.cookie('sid')},'task/list/');
+        // console.log(a);
+
+
+        $('#reportrange').daterangepicker({
+            format: 'D/MM/YYYY',
+            startDate: moment().today,
+            minDate: '01/01/2012',
+            maxDate: '12/31/2015',
+            showDropdowns: true,
+            timePicker: false,
+            timePickerIncrement: 1,
+            timePicker12Hour: true,
+            ranges: {
+                'Сьогодні': [moment(), moment()],
+                'Тиждень': [moment().startOf('week'), moment().endOf('week')],
+                'Місяць': [moment().startOf('month'), moment().endOf('month')],
+                'Рік': [moment().startOf('year'), moment().endOf('year')]
+            },
+            opens: 'right',
+            drops: 'down',
+            buttonClasses: ['btn', 'btn-sm'],
+            applyClass: 'btn-primary',
+            cancelClass: 'btn-default',
+            separator: ' to ',
+            locale: {
+                applyLabel: 'Так',
+                cancelLabel: 'Скинути',
+                fromLabel: 'Від',
+                toLabel: 'До',
+                customRangeLabel: 'Період',
+                daysOfWeek: ['Нд', 'По', 'Вт', 'Ср', 'Чт', 'Пт','Сб'],
+                monthNames: ['Січень', 'Лютий', 'Березень', 'Квітень', 'Травень', 'Червень', 'Липень', 'Серпень', 'Вересень', 'Жовтень', 'Листопад', 'Грудень'],
+                firstDay: 1
+            }
+        }, function(start, end, label) {
+            $('#reportrange span').html(start.format('D.MM.YYYY') + ' - ' + end.format('D.MM.YYYY'));
+            $("#daterange-input").val(start.format('D.MM.YYYY') + ' - ' + end.format('D.MM.YYYY'));
+        });
+
+
 
         console.log( $.cookie('sid'));
 

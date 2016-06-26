@@ -11,7 +11,12 @@
         <div class="row">
             <div class="medium-9 small-12 columns">
                 <div class="row">
-                    <div class="columns medium-3 small-5"><input type="text" name="daterange" /></div>
+                    <div class="columns medium-3 small-5"><input type="text" class="hidden" name="date" id="daterange-input">
+                        <div id="reportrange" class="form-control">
+                            <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                            <span></span> <b class="caret"></b>
+                        </div>
+                    </div>
                     <div class="columns medium-3 small-5">
                         <select>
                             <option value="1">Offecr country+name1</option>
@@ -54,5 +59,7 @@
 
 <script type="text/javascript" src="js/jquery.min.js"></script>
 <script type="text/javascript" src="js/main.min.js"></script>
+<script type="text/javascript" src="js/daterangepicker.js"></script>
+
 </body>
 </html>
