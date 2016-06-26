@@ -17,7 +17,8 @@
             if(sid.result){
                 // $.removeCookie('sid')
                 $.cookie('sid', sid.sid);
-                window.location.href = $(location).attr('href').slice(0, -10) + 'index.html';
+
+                window.location.href = $(location).attr('href').slice(0, -10);
             }else{
                 alert(sid.msg);
             }
@@ -27,6 +28,7 @@
         });
         $('input[name="daterange"]').daterangepicker({});
 
+        console.log( $.cookie('sid'));
 
 
 
