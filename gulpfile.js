@@ -12,6 +12,7 @@ var rename = require('gulp-rename');
 var js_arr = [
     'node_modules/bootstrap-daterangepicker/moment.js',
     'node_modules/bootstrap-daterangepicker/daterangepicker.js',
+    'node_modules/jquery.cookie/jquery.cookie.js',
     'js/custom/*.js'
 ];
 
