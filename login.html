@@ -30,10 +30,23 @@
     <script type="text/javascript" src="js/jquery.min.js"></script>
     <!--<script type="text/javascript" src="js/main.min.js"></script>-->
     <script type="text/javascript">
-       $(document).ready({
+        (function($, window, document, undefined) {
+            'use strict';
+
+            var $doc = $(document),
+                    $window = $(window);
 
 
-       });
+            $doc.ready(function(jQuery) {
+
+
+                $('#submit').click(function () {
+
+                });
+            });
+
+
+        }(jQuery, window, document));
     </script>
 </body>
 </html>
