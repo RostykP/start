@@ -16,13 +16,13 @@
                 pass = $('input[name="pass"]').val();
 
             var sid = getResp({"login": login, "pass": pass}, 'auth/');
-            if (sid.result) {
+            if (sid.result === true) {
                 // $.removeCookie('sid')
                 $.cookie('sid', sid.sid);
 
                 window.location.href = $(location).attr('href').slice(0, -10);
-            } else {
-                alert(sid.msg);
+            }else{
+               alert(sid.msg);
             }
         });
 
@@ -83,8 +83,6 @@
                     $("#categories").append("<option value='" + array_category[i].name + "'>" + array_category[i].country + " " + array_category[i].name + "</option>");
                 }
 
-            } else {
-                alert(array_category);
             }
         }
 
@@ -102,11 +100,12 @@
                 data_set.oname = data_cat;
             }
 
-            if(startDate){
-                data_set.date = startDate;
-            }
+            // if(startDate){
+            //     data_set.date = startDate;
+            // }
 
-            getTasks(data_set);
+           var a = getTasks(data_set);
+
             
 
         });
@@ -143,14 +142,15 @@
             url: "http://95.46.98.99/sys/" + url,
             success: function (data) {
                 myVariable = data;
-           
 
+                console.log(myVariable)
             },
             error: function (xhr, ajaxOptions, thrownError) {
                 //if end of session go to login
                 // if(!((window.location.href).indexOf('login') != -1)){
                 //     window.location.href = $(location).attr('href')+'login.html';
                 // }
+
                 myVariable = false;
             }
         });
@@ -159,10 +159,11 @@
             return myVariable;
 
         } else {
+
             if (myVariable.result === false && (myVariable.msg).indexOf('invalid session') == -1) {
                 return myVariable;
             } else if (!((window.location.href).indexOf('login') != -1)) {
-                // window.location.href = $(location).attr('href') + 'login.html';
+                window.location.href = $(location).attr('href') + 'login.html';
                 return false;
             }
 
@@ -189,8 +190,6 @@
 
             });
             $("#task_list ul").html(res);
-        }else{
-            alert (tasks);
         }
     }
 
