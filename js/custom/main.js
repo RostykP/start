@@ -102,11 +102,10 @@
                 data_set.oname = data_cat;
             }
 
-            // console.log(startDate)
-            // if(startDate){
-            //     data_set.date = startDate;
-            // }
- 
+            if(startDate){
+                data_set.date = startDate;
+            }
+
             getTasks(data_set);
             
 
