@@ -27,3 +27,14 @@
 #categories {
     font-size: 14px;
 }
+#task_list{
+    .task-list-class{
+        padding-bottom: 10px;
+        span{
+            &:first-child{
+                color: red;
+                padding-right: 5px;
+            }
+        }
+    }
+}

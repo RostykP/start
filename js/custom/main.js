@@ -80,7 +80,7 @@
                 var sec = date.getSeconds().toString();
                 sec = sec.length > 1 ? sec : '0' + sec;
                 var newDate = date.getFullYear()+"-"+month+"-"+day+" "+date.getHours()+":"+date.getMinutes()+":"+sec;
-                $("#task_list").append("<div class='task-list-class' id='"+tasks.list[i].id+"' ><div>"+tasks.list[i].id+"</div><div>"+newDate+"</div></div>");
+                $("#task_list").append("<div class='task-list-class' id='"+tasks.list[i].id+"' ><span>"+tasks.list[i].id+"</span><span>"+newDate+"</span></div>");
             });
         }
 
@@ -97,6 +97,10 @@
         }
 
 
+        //filter-tasks
+        $('#filter-tasks').click(function () {
+            
+        });
 
 
 
