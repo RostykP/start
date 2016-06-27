@@ -24,9 +24,6 @@
             }
         });
 
-        // var a= getResp({"sid":$.cookie('sid')},'task/list/');
-        // console.log(a);
-
 
         $('#reportrange').daterangepicker({
             format: 'D/MM/YYYY',
@@ -70,32 +67,80 @@
         console.log( $.cookie('sid'));
 
 
-
-
-        function getResp(data, url) {
-            var myVariable;
-            $.ajax({
-                type: "POST",
-                crossDomain: true,
-                'global': false,
-                'async': false,
-                dataType: "json",
-                data: JSON.stringify(data),
-                url: "http://95.46.98.99/sys/" + url,
-                success: function (data) {
-                    myVariable = data;
-
-                },
-                error: function (xhr, ajaxOptions, thrownError) {
-                    console.log(xhr.status);
-                    console.log(thrownError);
-                }
+        //get list of tasks
+        var tasks= getResp({"sid":$.cookie('sid')},'task/list/');
+        if(tasks){
+            $.each( tasks.list, function( i ) {
+                // alert( a.list[i].id );
+                var date = new Date(tasks.list[i].ts);
+                var month = (1 + date.getMonth()).toString();
+                month = month.length > 1 ? month : '0' + month;
+                var day = date.getDate().toString();
+                day = day.length > 1 ? day : '0' + day;
+                var sec = date.getSeconds().toString();
+                sec = sec.length > 1 ? sec : '0' + sec;
+                var newDate = date.getFullYear()+"-"+month+"-"+day+" "+date.getHours()+":"+date.getMinutes()+":"+sec;
+                $("#task_list").append("<div class='task-list-class' id='"+tasks.list[i].id+"' ><div>"+tasks.list[i].id+"</div><div>"+newDate+"</div></div>");
             });
-            return myVariable;
         }
 
 
+
+        //get list of categories
+        var array_category = getResp({"sid":$.cookie('sid')}, 'sys/offer/list/').list;
+
+        if(array_category){
+            for(var i=0; i<array_category.length; i++){
+                $("#categories").append("<option value='"+array_category[i].id+"'>"+array_category[i].country+" "+array_category[i].name+"</option>");
+            }
+
+        }
+
+
+
+
+
+    });
+    
+    //get task
+    $(document).on("click",".task-list-class",function() {
+        var taskDetail;
+        var sid = $.cookie('sid');
+        var id = this.id;
+        var a= getResp({"sid":$.cookie('sid'),"id":1},'task/get/');
+        console.log(a);
+
     });
 
+    function getResp(data, url) {
+        var myVariable;
+        $.ajax({
+            type: "POST",
+            crossDomain: true,
+            'global': false,
+            'async': false,
+            dataType: "json",
+            data: JSON.stringify(data),
+            url: "http://95.46.98.99/sys/" + url,
+            success: function (data) {
+                myVariable = data;
+
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                //if end of session go to login
+                window.location.href = $(location).attr('href')+'login.html';
+            }
+        });
+
+        if(myVariable.result === true){ //if valid session
+            return myVariable;
+
+        }else  {
+            if(!((window.location.href).indexOf('login') != -1)){
+                window.location.href = $(location).attr('href')+'login.html';
+            }
+            return false;
+        }
+    }
 
 }(jQuery, window, document));
