@@ -6,6 +6,7 @@
         $window = $(window),
         startDate,
         endDate;
+    var idForDelete;
 
 
     $doc.ready(function (jQuery) {
@@ -22,7 +23,7 @@
 
                 window.location.href = $(location).attr('href').slice(0, -10);
             }else{
-               alert(sid.msg);
+                $.MessageBox(sid.msg);
             }
         });
 
@@ -127,6 +128,22 @@
                 }
             });
         });
+
+        $("#delete_task_id").click(function () {
+
+            var sid = $.cookie('sid');
+            var id = parseInt(idForDelete);
+            console.log(sid+" "+id);
+            var deleted = getResp({"sid": sid, "id": id}, 'task/delete/');
+            // // console.log(deleted);
+            if (deleted.result === true){
+                $.MessageBox("Task was deleted!!!");
+                $("#task_list").find("#"+id).hide();
+            } else {
+                $.MessageBox("Task was not deleted!!!");
+            }
+
+        });
     });
 
 
@@ -177,7 +194,7 @@
         if (tasks) {
             var res = '';
             $.each(tasks.list, function (i) {
-                // alert( a.list[i].id );
+                // $.MessageBox( a.list[i].id );
                 var date = new Date(tasks.list[i].ts);
                 var month = (1 + date.getMonth()).toString();
                 month = month.length > 1 ? month : '0' + month;
@@ -202,7 +219,8 @@
 
         var a= getResp({"sid":$.cookie('sid'),"id": parseInt(id)},'task/get/');
         console.log(a);
-
+        idForDelete = id;
+        console.log(idForDelete);
         $('#show-product-info').removeClass('hidden');
         $('a#status').attr('data-status',a.state);
         $('#prod-info').html('<b>Date:</b>'+a.ts+'; '+'<b>Task:</b>'+a.id+'; '+'<b>Offer:</b>'+a.offerName+' '+a.country+'; '+'<b>Af id:</b>'+a.aid);
