@@ -8,6 +8,9 @@
         border: 1px solid #ccc;
         border-radius: 5px;
         padding: 20px 10px;
+        height: 400px;
+        overflow-y: auto;
+        word-break: break-all;
     }
 
     .screenchot{
@@ -28,6 +31,12 @@
     font-size: 14px;
 }
 #task_list{
+    ul{
+        margin: 0;
+        li{
+            list-style-type: none;
+        }
+    }
     .task-list-class{
         padding-bottom: 10px;
         span{
@@ -36,5 +45,25 @@
                 padding-right: 5px;
             }
         }
+    }
+}
+.hidden{
+    display: none;
+}
+.clearfix{
+    clear: both;
+}
+#status{
+    &.button[data-status="1"]{
+        background: #d6d65c;
+    }
+    &.button[data-status="0"]{
+        background: #44a4ff;
+    }
+    &.button[data-status="2"]{
+        background: green;
+    }
+    &.button[data-status="-1"]{
+        background: red;
     }
 }
