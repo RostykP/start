@@ -99,7 +99,7 @@
 
         //filter-tasks
         $('#filter-tasks').click(function () {
-            
+
         });
 
 
@@ -108,10 +108,12 @@
     
     //get task
     $(document).on("click",".task-list-class",function() {
+
         var taskDetail;
         var sid = $.cookie('sid');
         var id = this.id;
-        var a= getResp({"sid":$.cookie('sid'),"id":1},'task/get/');
+
+        var a= getResp({"sid":$.cookie('sid'),"id": parseInt(id)},'task/get/');
         console.log(a);
 
     });
@@ -132,17 +134,21 @@
             },
             error: function (xhr, ajaxOptions, thrownError) {
                 //if end of session go to login
-                window.location.href = $(location).attr('href')+'login.html';
+                // if(!((window.location.href).indexOf('login') != -1)){
+                //     window.location.href = $(location).attr('href')+'login.html';
+                // }
+                myVariable = false;
             }
         });
 
-        if(myVariable.result === true){ //if valid session
+        if(myVariable.result === true && myVariable){ //if valid session
             return myVariable;
 
         }else  {
-            if(!((window.location.href).indexOf('login') != -1)){
-                window.location.href = $(location).attr('href')+'login.html';
-            }
+
+            // if(!((window.location.href).indexOf('login') != -1)){
+            //     window.location.href = $(location).attr('href')+'login.html';
+            // }
             return false;
         }
     }
