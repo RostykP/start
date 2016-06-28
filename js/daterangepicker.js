@@ -543,8 +543,8 @@
             this.startDate = start;
             this.endDate = end;
 
-            if (!this.startDate.isSame(this.oldStartDate) || !this.endDate.isSame(this.oldEndDate))
-                this.notify();
+            //if (!this.startDate.isSame(this.oldStartDate) || !this.endDate.isSame(this.oldEndDate))
+            this.notify();
 
             this.updateCalendars();
         },
@@ -674,8 +674,8 @@
             this.element.removeClass('active');
             this.container.hide();
 
-            if (!this.startDate.isSame(this.oldStartDate) || !this.endDate.isSame(this.oldEndDate))
-                this.notify();
+            //if (!this.startDate.isSame(this.oldStartDate) || !this.endDate.isSame(this.oldEndDate))
+            this.notify();
 
             this.oldStartDate = this.startDate.clone();
             this.oldEndDate = this.endDate.clone();
@@ -751,7 +751,7 @@
                 this.element.val(this.endDate.format(this.format));
                 this.element.trigger('change');
             }
-        },
+		},
 
         clickRange: function (e) {
             var label = e.target.innerHTML;
@@ -898,9 +898,9 @@
             this.chosenLabel = this.oldChosenLabel;
             this.updateView();
             this.updateCalendars();
-            $('#reportrange span').html('');
-            $('#daterange-input').val('');
             this.hide();
+			$('#reportrange span').html('');
+            $('#daterange-input').val('');
             this.element.trigger('cancel.daterangepicker', this);
         },
 

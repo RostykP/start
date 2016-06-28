@@ -32,10 +32,8 @@
 
 
         $('#reportrange').daterangepicker({
-            format: 'D/MM/YYYY',
+            format: 'YYYY/MM/DD',
             startDate: moment(),
-            minDate: '01/01/2012',
-            maxDate: '12/31/2015',
             showDropdowns: true,
             timePicker: false,
             timePickerIncrement: 1,
@@ -50,24 +48,14 @@
             opens: 'right',
             drops: 'down',
             buttonClasses: ['btn', 'btn-sm'],
-            applyClass: 'btn-primary',
-            cancelClass: 'btn-default',
+            applyClass: 'button small',
+            cancelClass: 'button alert small',
             separator: ' to ',
-            // locale: {
-            //     applyLabel: 'Так',
-            //     cancelLabel: 'Скинути',
-            //     fromLabel: 'Від',
-            //     toLabel: 'До',
-            //     customRangeLabel: 'Період',
-            //     daysOfWeek: ['Нд', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт','Сб'],
-            //     monthNames: ['Січень', 'Лютий', 'Березень', 'Квітень', 'Травень', 'Червень', 'Липень', 'Серпень', 'Вересень', 'Жовтень', 'Листопад', 'Грудень'],
-            //     firstDay: 1
-            // }
         }, function (start, end, label) {
-            $('#reportrange span').html(start.format('D.MM.YYYY') + ' - ' + end.format('D.MM.YYYY'));
-            $("#daterange-input").val(start.format('D.MM.YYYY') + ' - ' + end.format('D.MM.YYYY'));
-            startDate = start.format('YYYY-MM-D');
-            endDate = end.format('YYYY-MM-D');
+            $('#reportrange span').html(start.format('YYYY/MM/D') + ' - ' + end.format('YYYY/MM/D'));
+            $("#daterange-input").val(start.format('YYYY/MM/D') + '-' + end.format('YYYY/MM/D'));
+            startDate = start.format('YYYY/MM/D');
+            endDate = end.format('YYYY/MM/D');
         });
 
 
