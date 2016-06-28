@@ -233,6 +233,10 @@
         $('a#status').attr('data-status',a.state);
         $('#prod-info').html('<b>Date:</b>'+a.ts+'; '+'<b>Task:</b>'+a.id+'; '+'<b>Offer:</b>'+a.offerName+' '+a.country+'; '+'<b>Af id:</b>'+a.aid);
         $('#product-data-d').html(atob(a.data));
+		$(".screenshot-list").html("");
+		$.each(a.images, function (i) {
+			$(".screenshot-list").append('<li><a href="#"><img src="data:image/png;base64,'+a.images[i].data+'" alt=""/></a></li>');
+		});
 
     });
 
