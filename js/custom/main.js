@@ -13,6 +13,7 @@
 
         $(".fancybox").fancybox();
 
+        $('#current-date').html(moment().format("YYYY-MM-D"));
         $('#submit').click(function (e) {
             e.preventDefault();
             var login = $('input[name="login"]').val(),
@@ -91,14 +92,17 @@
             if(data_cat != ''){
                 data_set.oname = data_cat;
             }
+            var date_val = $("#daterange-input").val();
+            if(date_val.length>0){
+                var date_arr = date_val.split('-');
+                data_set.sdate = new Date(date_arr[0]+" 0:00:00" ).getTime();
+                data_set.edate = new Date(date_arr[1]+" 23:59:59").getTime();
+            }
+            console.log(data_set);
 
-            // if(startDate){
-            //     data_set.date = startDate;
-            // }
+            var a = getTasks(data_set);
 
-           var a = getTasks(data_set);
 
-            
 
         });
 
@@ -222,7 +226,7 @@
         console.log(idForDelete);
         $('#show-product-info').removeClass('hidden');
         $('a#status').attr('data-status',a.state);
-        $('#prod-info').html('<b>Date:</b>'+a.ts+'; '+'<b>Task:</b>'+a.id+'; '+'<b>Offer:</b>'+a.offerName+' '+a.country+'; '+'<b>Af id:</b>'+a.aid);
+        $('#prod-info').html('<b>Date:</b>'+moment(a.ts).format()+'; '+'<b>Task:</b>'+a.id+'; '+'<b>Offer:</b>'+a.offerName+' '+a.country+'; '+'<b>Af id:</b>'+a.aid);
         $('#product-data-d').html(decodeURIComponent(escape(window.atob( a.data ))));
 		$(".screenshot-list").html("");
 		$.each(a.images, function (i) {
