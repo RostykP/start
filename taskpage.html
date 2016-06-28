@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Project</title>
+    <link rel="stylesheet" href="css/main.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="css/foundation.min.css" type="text/css" media="screen" />
+
+</head>
+
+<body>
+<div class="wrapper" id="wrapper">
+    <div class="row">
+        <div class="medium-9 small-12 columns">
+            <div class="row">
+                <div class="columns medium-3 small-5"><input type="text" class="hidden" name="date" id="daterange-input" value="">
+                    <div id="reportrange" class="form-control" >
+                        <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                        <span></span> <b class="caret"></b>
+                    </div>
+                </div>
+                <div class="columns medium-3 small-5">
+                    <select id="categories">
+                        <option value='all'>All categories</option>
+                    </select>
+                </div>
+                <div class="columns medium-2 small-3 end"><a href="#" id="filter-tasks" class="button filter"><i class="icon-filter"></i>Filter</a></div>
+            </div>
+            <div class="row">
+
+                <div class="columns medium-3">
+                    <div class="row collapse">
+                        <div class="small-10 columns">
+                            <input  type="text" placeholder="Quick search...">
+                        </div>
+                        <div class="small-2 columns">
+                            <a href="#" id="quick-search" class="button postfix">ok</a>
+                        </div>
+                    </div>
+                    <div id="task_list">
+                        <ul>
+
+                        </ul>
+                    </div>
+
+                </div>
+                <div class="columns medium-9 ">
+                    <div id="show-product-info" class="row collapse hidden">
+                        <div class="medium-1 small-1 columns">
+                            <a class="button  small" data-status="" id="status">C</a>
+                        </div>
+                        <div class="medium-11 small-11 columns" id="prod-info">
+                        </div>
+                        <div class="clearfix">
+                            <button class="button alert small" id="delete_task_id">Delete</button>
+                        </div>
+                    </div>
+
+                    <div class="data-win" id="product-data-d">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="medium-3 small-12 columns screenchot">
+            <h3>Screenshot list</h3>
+            <ul>
+                <li>
+                    <a href="#"><img src="assets/img/phone1.png" alt=""/></a>
+                </li>
+                <li>
+                    <a href="#"><img src="assets/img/phone2.png" alt=""/></a>
+                </li>
+                <li>
+                    <a href="#"><img src="assets/img/phone3.png" alt=""/></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/main.min.js"></script>
+<script type="text/javascript" src="js/daterangepicker.js"></script>
+<script type="text/javascript" src="js/messagebox.min.js"></script>
+
+
+
+</body>
+</html>

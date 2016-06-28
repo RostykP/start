@@ -20,8 +20,9 @@
             if (sid.result === true) {
                 // $.removeCookie('sid')
                 $.cookie('sid', sid.sid);
-
-                window.location.href = $(location).attr('href').slice(0, -10);
+                // console.log($(location));
+                // console.log($(location).attr('href'));
+                window.location.href = $(location).attr('href') + 'taskpage.html';
             }else{
                 $.MessageBox(sid.msg);
             }
@@ -130,19 +131,25 @@
         });
 
         $("#delete_task_id").click(function () {
+            $.MessageBox({
+                buttonDone  : "Yes",
+                buttonFail  : "No",
+                message     : "Do you want delete this task?"
+            }).done(function(){
+                var sid = $.cookie('sid');
+                var id = parseInt(idForDelete);
+                console.log(sid+" "+id);
+                var deleted = getResp({"sid": sid, "id": id}, 'task/delete/');
+                // // console.log(deleted);
+                if (deleted.result === true){
+                    $.MessageBox("Task was deleted!!!");
+                    $("#task_list").find("#"+id).hide();
+                } else {
+                    $.MessageBox("Task was not deleted!!!");
+                }
+            }).fail(function(){
 
-            var sid = $.cookie('sid');
-            var id = parseInt(idForDelete);
-            console.log(sid+" "+id);
-            var deleted = getResp({"sid": sid, "id": id}, 'task/delete/');
-            // // console.log(deleted);
-            if (deleted.result === true){
-                $.MessageBox("Task was deleted!!!");
-                $("#task_list").find("#"+id).hide();
-            } else {
-                $.MessageBox("Task was not deleted!!!");
-            }
-
+            });
         });
     });
 
@@ -179,8 +186,8 @@
 
             if (myVariable.result === false && (myVariable.msg).indexOf('invalid session') == -1) {
                 return myVariable;
-            } else if (!((window.location.href).indexOf('login') != -1)) {
-                window.location.href = $(location).attr('href') + 'login.html';
+            } else if (!((window.location.href).indexOf('index') != -1)) {
+                window.location.href = $(location).attr('href').slice(0, -13);
                 return false;
             }
 
