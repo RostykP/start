@@ -13,6 +13,7 @@ var js_arr = [
     'node_modules/bootstrap-daterangepicker/moment.js',
     'node_modules/bootstrap-daterangepicker/daterangepicker.js',
     'node_modules/jquery.cookie/jquery.cookie.js',
+    'node_modules/fancybox/dist/js/jquery.fancybox.pack.js',
     'js/custom/*.js'
 ];
 

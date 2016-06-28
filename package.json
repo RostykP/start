@@ -18,7 +18,8 @@
     "gulp-uglify": "^1.5.4",
     "jquery": "2.2.4",
     "jshint": "^2.9.2",
-    "jquery.cookie":"1.4.1"
+    "jquery.cookie":"1.4.1",
+    "fancybox":"3.0.0"
   },
   "dependencies": {
     "bootstrap-daterangepicker": "2.1.22"
