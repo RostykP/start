@@ -233,7 +233,6 @@
         $('a#status').attr('data-status',a.state);
         $('#prod-info').html('<b>Date:</b>'+a.ts+'; '+'<b>Task:</b>'+a.id+'; '+'<b>Offer:</b>'+a.offerName+' '+a.country+'; '+'<b>Af id:</b>'+a.aid);
         $('#product-data-d').html(atob(a.data));
-        alert(a.data)
 
     });
 
