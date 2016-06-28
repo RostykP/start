@@ -214,12 +214,13 @@
 
             });
             $("#task_list ul").html(res);
-            $(".task-list-class:first").click();
+            $(".task-list-class:first").click().addClass('active');
         }
     }
 
 
     $(document).on("click",".task-list-class",function() {
+        $('.task-list-class').removeClass('active');
 
         var taskDetail;
         var sid = $.cookie('sid');
@@ -237,6 +238,8 @@
 		$.each(a.images, function (i) {
 			$(".screenshot-list").append('<li><a href="#"><img src="data:image/png;base64,'+a.images[i].data+'" alt=""/></a></li>');
 		});
+
+        $(this).addClass('active');
 
     });
 

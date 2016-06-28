@@ -38,12 +38,27 @@
         }
     }
     .task-list-class{
-        padding-bottom: 10px;
+        padding: 10px;
+        margin: 10px 0;
+        border: 2px solid #2ba6cb;
+        border-radius: 5px;
         span{
             &:first-child{
-                color: red;
-                padding-right: 5px;
+                color: #0a5971;
+                font-weight:bold;
+                padding-right: 15px;
             }
+        }
+        &.active{
+            background: #a5e0f3;
+            color: white;
+            border-color: #2ba6cb;
+        }
+        &:hover{
+            cursor: pointer;
+            background: #a5e0f3;
+            color: white;
+            border-color: #2ba6cb;
         }
     }
 }
@@ -66,4 +81,8 @@
     &.button[data-status="-1"]{
         background: red;
     }
+}
+#quick-search{
+    width: 100%;
+    max-width: 50px;
 }
