@@ -95,8 +95,8 @@
             var date_val = $("#daterange-input").val();
             if(date_val.length>0){
                 var date_arr = date_val.split('-');
-                data_set.sdate = new Date(date_arr[0]+" 0:00:00" ).getTime();
-                data_set.edate = new Date(date_arr[1]+" 23:59:59").getTime();
+                data_set.sdate = new Date(date_arr[0]+" 0:00:00" ).getTime()/1000.0;
+                data_set.edate = new Date(date_arr[1]+" 23:59:59").getTime()/1000.0;
             }
             console.log(data_set);
 
