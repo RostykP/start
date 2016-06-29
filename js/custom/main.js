@@ -196,7 +196,7 @@
             var res = '';
             $.each(tasks.list, function (i) {
                 // $.MessageBox( a.list[i].id );
-                var date = new Date(tasks.list[i].ts);
+                var date = new Date(tasks.list[i].ts*1000);
                 var month = (1 + date.getMonth()).toString();
                 month = month.length > 1 ? month : '0' + month;
                 var day = date.getDate().toString();
@@ -226,7 +226,7 @@
         console.log(idForDelete);
         $('#show-product-info').removeClass('hidden');
         $('a#status').attr('data-status',a.state);
-        $('#prod-info').html('<b>Date:</b>'+moment(a.ts).format()+'; '+'<b>Task:</b>'+a.id+'; '+'<b>Offer:</b>'+a.offerName+' '+a.country+'; '+'<b>Af id:</b>'+a.aid);
+        $('#prod-info').html('<b>Date:</b>'+moment(a.ts*1000).format()+'; '+'<b>Task:</b>'+a.id+'; '+'<b>Offer:</b>'+a.offerName+' '+a.country+'; '+'<b>Af id:</b>'+a.aid);
         $('#product-data-d').html(decodeURIComponent(escape(window.atob( a.data ))));
 		$(".screenshot-list").html("");
 		$.each(a.images, function (i) {
