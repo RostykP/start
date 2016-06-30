@@ -1,4 +1,5 @@
 /*jslint unparam: true, browser: true, indent: 2 */
+
 (function ($, window, document, undefined) {
     'use strict';
 
@@ -9,12 +10,15 @@
     var idForDelete;
 
 
+
     $doc.ready(function (jQuery) {
 
         $(".fancybox").fancybox();
 
         $('#current-date').html(moment().format("YYYY-MM-D"));
         $('#submit').click(function (e) {
+
+
             e.preventDefault();
             var login = $('input[name="login"]').val(),
                 pass = $('input[name="pass"]').val();
@@ -148,9 +152,28 @@
         });
     });
 
-
+//function getIP(){
+//    var IP="";
+ //   $.ajax({
+  //      url: "IP.txt",
+  //      dataType: "text",
+   //     async: true,
+    //    success: function(msg){
+    //        alert(msg)
+//            IP = msg.split('\n')[0].replace(/\n+$/m , '');
+ //       }
+ //   });
+ //   alert(IP)
+ //   return IP;
+//}
     function getResp(data, url) {
         var myVariable;
+      //  var IP=getIP();
+        //$.get('IP.txt', function(dataIP){
+            //IP = dataIP.split('\n')[0].replace(/\n+$/m , '');
+            //IP = "http://"+IP+"/sys/" + url;
+       // });
+        //alert("http://"+IP+"/sys/" + url)
         $.ajax({
             type: "POST",
             crossDomain: true,
@@ -172,22 +195,21 @@
 
                 myVariable = false;
             }
+
         });
 
         if (myVariable.result === true && myVariable) { //if valid session
             return myVariable;
-
         } else {
-
             if (myVariable.result === false && (myVariable.msg).indexOf('invalid session') == -1) {
                 return myVariable;
             } else if (!((window.location.href).indexOf('index') != -1)) {
                 window.location.href = $(location).attr('href').slice(0, -13);
                 return false;
             }
-
-
         }
+
+
     }
 
 
