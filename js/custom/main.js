@@ -108,12 +108,13 @@
 
         //qiuck search
         $('#quick-search').click(function (e) {
+            getTasks({"sid": $.cookie('sid')});
             e.preventDefault();
 
             var list = $('#task_list ul li');
             list.removeClass('found');
             var searchString = $(this).parent().prev().find('input').val();
-            console.log(searchString)
+
             list.each(function () {
                 console.log($(this).text().indexOf(searchString))
                 if ($(this).text().indexOf(searchString) == -1) {
@@ -204,7 +205,7 @@
                 var sec = date.getSeconds().toString();
                 sec = sec.length > 1 ? sec : '0' + sec;
                 var newDate = date.getFullYear() + "-" + month + "-" + day + " " + date.getHours() + ":" + date.getMinutes() + ":" + sec;
-                res += "<li class='task-list-class' id='" + tasks.list[i].id + "' ><span>" + tasks.list[i].id + "</span><span>" + newDate + "</span></li>";
+                res += "<li class='task-list-class' id='" + tasks.list[i].id + "' ><span>" + tasks.list[i].id + " -</span><span>" + newDate + "</span></li>";
 
             });
             $("#task_list ul").html(res);
@@ -226,7 +227,7 @@
         console.log(idForDelete);
         $('#show-product-info').removeClass('hidden');
         $('a#status').attr('data-status',a.state);
-        $('#prod-info').html('<b>Date:</b>'+moment(a.ts*1000).format()+'; '+'<b>Task:</b>'+a.id+'; '+'<b>Offer:</b>'+a.offerName+' '+a.country+'; '+'<b>Af id:</b>'+a.aid);
+        $('#prod-info').html('<b>Date:</b>'+moment(a.ts*1000).format()+'; '+'<b>Task: #</b>'+a.id+'; '+'<b>Offer:</b> -'+a.country+' - '+a.offerName+'; '+'<b>Af id:</b>'+a.aid);
         $('#product-data-d').html(decodeURIComponent(escape(window.atob( a.data ))));
 		$(".screenshot-list").html("");
 		$.each(a.images, function (i) {
