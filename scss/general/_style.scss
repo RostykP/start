@@ -1,5 +1,7 @@
 .wrapper{
+    height: 100%;
     padding: 20px 0;
+    overflow: hidden;
     .row{
         max-width: 1280px;
     }
@@ -43,7 +45,9 @@
 
     ul{
         padding-right: 10px;
-        max-height: 523px;
+        //max-height: 100vh;
+        height: 100%;
+        position: relative;
         overflow: auto;
         &::-webkit-scrollbar {
             width: 8px;
@@ -58,33 +62,31 @@
         li{
             list-style-type: none;
         }
+
     }
     .task-list-class{
         padding: 10px;
         margin: 10px 0;
-        border: 2px solid #2ba6cb;
-        border-radius: 5px;
+        color: blue;
         span{
             &:first-child{
-                color: #0a5971;
-                font-weight:bold;
                 padding-right: 6px;
             }
+            border-bottom:1px solid  ;
         }
         &.active{
-            background: #a5e0f3;
-            color: white;
-            border-color: #2ba6cb;
+            color: red;
         }
         &:hover{
             cursor: pointer;
-            background: #a5e0f3;
-            color: white;
-            border-color: #2ba6cb;
+            span{
+                border: none;
+            }
         }
         &:first-child{
             margin-top: 0;
         }
+
     }
 }
 #prod-info{

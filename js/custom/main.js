@@ -150,6 +150,8 @@
 
             });
         });
+        $window.trigger('resize');
+
     });
 
 //function getIP(){
@@ -181,7 +183,7 @@
             'async': false,
             dataType: "json",
             data: JSON.stringify(data),
-            url: "http://95.46.98.99/sys/" + url,
+            url: "http://"+$.cookie('domain')+"/sys/" + url,
             success: function (data) {
                 myVariable = data;
 
@@ -226,7 +228,7 @@
                 day = day.length > 1 ? day : '0' + day;
                 var sec = date.getSeconds().toString();
                 sec = sec.length > 1 ? sec : '0' + sec;
-                var newDate = date.getFullYear() + "-" + month + "-" + day + " " + date.getHours() + ":" + date.getMinutes() + ":" + sec;
+                var newDate = date.getFullYear() + "-" + month + "-" + day + "<br> " + date.getHours() + ":" + date.getMinutes() + ":" + sec;
                 res += "<li class='task-list-class' id='" + tasks.list[i].id + "' ><span>" + tasks.list[i].id + " -</span><span>" + newDate + "</span></li>";
 
             });
@@ -260,5 +262,12 @@
 
     });
 
+    $window.on('resize',function(){
+
+        $('#wrapper').height( Math.max(document.documentElement.clientHeight, window.innerHeight || 0) -40 );
+        $('#task_list ul').css('max-height',$('#wrapper').height() - $('.row.search').outerHeight() - $('.row.filter').outerHeight()+'px');
+        $('#product-data-d').height($('#wrapper').height() - $('.row.filter').outerHeight() - $('#show-product-info').outerHeight()-40);
+
+    })
 
 }(jQuery, window, document));
