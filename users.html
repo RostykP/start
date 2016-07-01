@@ -3,26 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <title>Project</title>
-    <link rel="stylesheet" href="css/main.css" type="text/css" media="screen" />
-    <link rel="stylesheet" href="css/foundation.min.css" type="text/css" media="screen" />
-    <link rel="stylesheet" href="css/andrii.css" type="text/css" media="screen" />
-    <link rel="stylesheet" href="css/lc_switch.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="css/main.css" type="text/css" media="screen"/>
+    <link rel="stylesheet" href="css/foundation.min.css" type="text/css" media="screen"/>
+    <link rel="stylesheet" href="css/andrii.css" type="text/css" media="screen"/>
+    <link rel="stylesheet" href="css/lc_switch.css" type="text/css" media="screen"/>
 
 </head>
 <body>
-<div id="all-users" class="active">
-    <!--<div class="switch">-->
-        <!--<input class="switch-input" id="exampleSwitch" type="checkbox" name="exampleSwitch">-->
-        <!--<label class="switch-paddle" for="exampleSwitch">-->
+<div class="wrapper" id="wrapper">
+    <div class="row">
+        <div id="all-users" class="active">
+            <!--<div class="switch">-->
+            <!--<input class="switch-input" id="exampleSwitch" type="checkbox" name="exampleSwitch">-->
+            <!--<label class="switch-paddle" for="exampleSwitch">-->
             <!--<span class="show-for-sr">Download Kittens</span>-->
-        <!--</label>-->
-    <!--</div>-->
-    <input id="add-user" type="button" value="+ Add user">
-    <table id="all-user-table">
-        <tr><th>№</th><th>Name</th><th>Password</th><th>Status</th><th>Action</th></tr>
-    </table>
-    <div></div>
+            <!--</label>-->
+            <!--</div>-->
+            <input id="add-user" class="button" type="button" value="+ Add user">
+            <table id="all-user-table">
+                <thead>
+                <tr>
+                    <th>№</th>
+                    <th>Name</th>
+                    <th>Password</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+            </table>
+            <div></div>
+        </div>
+    </div>
 </div>
+
 <script type="text/javascript" src="js/jquery.min.js"></script>
 <script type="text/javascript" src="js/main.min.js"></script>
 <script type="text/javascript" src="js/messagebox.min.js"></script>
