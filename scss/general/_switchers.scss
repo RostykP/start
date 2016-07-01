@@ -109,7 +109,14 @@ input:checked + label > .switch-inactive {
             background: #ff3b30;
         }
         input:checked ~ .switch-paddle {
-            background: #4cd964; }
+            background: #4cd964;
+        }
+
+        input:disabled + .switch-paddle {
+            background: blue;
+        }
+
+
     }
 }
 

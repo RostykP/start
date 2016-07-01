@@ -74,9 +74,11 @@
             //get list of categories
             var array_category = getResp({"sid": $.cookie('sid')}, 'sys/offer/list/').list;
             var list = '';
+
             if (array_category) {
                 for (var i = 0; i < array_category.length; i++) {
-                    list += "<option value='" + array_category[i].name + "'>" + array_category[i].country + " " + array_category[i].name + "</option>";
+
+                    list += '<option data-id="' + array_category[i].id + '" value="' + array_category[i].name + '">' + array_category[i].country + ' ' + array_category[i].name + '</option>';
                 }
                 $("#categories").html(list);
 
@@ -84,22 +86,27 @@
             //OFFERS
             var goods_table = $('#goods');
             if (goods_table.length > 0) {
-                var table = '';
-                $.each(array_category,function (key,value) {
-                    table += '<tr>' +
-                        '<td>'+(key+1)+'</td>' + // №
-                        '<td><select>'+list+'</select></td>' + // Category
-                        '<td><a href="'+value.url+'" target="_blank"> '+value.url+'</a></td>' + // URL
-                        '<td>'+value.country+'</td>' + // Country
-                        '<td class="js-code">JS code</td>' + // JS code
-                        '<td>'+value.amount+'</td>' + // Amount
-                        '<td class="status"><div class="switch"><input class="switch-input" id="status-'+value.id+'" type="checkbox" checked="" name="status"><label class="switch-paddle" for="status-'+value.id+'"></label></div></td>' + // Status
+                var table = '',
+                    selected = "selected ";
+
+                $.each(array_category, function (key, value) {
+                    var position = list.indexOf('data-id="' + value.id + '"'),
+                        output = [list.slice(0, position), selected, list.slice(position)].join('');
+
+                    table += '<tr data-cat-id="' + value.id + '">' +
+                        '<td>' + (key + 1) + '</td>' + // №
+                        '<td><select disabled>' + output + '</select></td>' + // Category
+                        '<td><input name="link" value="' + value.url + '" type="text" disabled> </td>' + // URL
+                        '<td><input name="country" type="text" value="' + value.country + '" disabled></td>' + // Country
+                        '<td class="js-code"><input type="text" readonly="readonly" value="JS code" disabled></td>' + // JS code
+                        '<td><input type="number" name="amount" value="' + value.amount + '" disabled></td>' + // Amount
+                        '<td class="status"><div class="switch"><input disabled class="switch-input" id="status-' + value.id + '" type="checkbox" checked="" name="status"><label class="switch-paddle" for="status-' + value.id + '"></label></div></td>' + // Status
                         '<td><div class="columns small-6 text-center"><button type="button" class="button small">Edit</button></div><div class="columns small-6 text-center"><button type="button" class="button alert small">Delete</button></div></td>' + // Actions
                         '</tr>';
 
                 });
+
                 goods_table.find('tbody').html(table);
-                console.log(table);
             }
             console.log(array_category);
         }
@@ -170,9 +177,6 @@
 
             });
         });
-
-
-
 
 
         $window.trigger('resize');
