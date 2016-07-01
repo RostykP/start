@@ -150,6 +150,31 @@ table{
             .switch-paddle{
                 vertical-align: middle;
             }
+            &.js-code{
+                input:not(:disabled){
+                    &:hover{
+                        cursor: pointer;
+                    }
+                }
+            }
+        }
+        .hidden{
+            display: none;
+        }
+    }
+    &#goods{
+        tbody{
+            tr{
+                &:hover{
+                    background: #f1f1f1;
+                }
+                input{
+                    &.error{
+                        background: #9e0c0f;
+                        color: #ffffff;
+                    }
+                }
+            }
         }
     }
 }

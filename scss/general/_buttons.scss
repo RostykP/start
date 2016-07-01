@@ -7,3 +7,38 @@
         }
     }
 }
+.popupS-open{
+    text-align: center;
+    #popupS-button-cancel{
+        background-color: #ec5840;
+        color: #FFFFFF;
+        display: inline-block;
+        text-align: center;
+        line-height: 1;
+        cursor: pointer;
+        -webkit-appearance: none;
+        transition: background-color .25s ease-out,color .25s ease-out;
+        vertical-align: middle;
+        border: 1px solid transparent;
+        border-radius: 3px;
+        padding: .85em 1em;
+        font-size: .9rem;
+        margin: 20px 5px 0 5px;
+    }
+    #popupS-button-ok{
+        background-color: #22bb5b;
+        color: #FFFFFF;
+        display: inline-block;
+        text-align: center;
+        line-height: 1;
+        cursor: pointer;
+        -webkit-appearance: none;
+        transition: background-color .25s ease-out,color .25s ease-out;
+        vertical-align: middle;
+        border: 1px solid transparent;
+        border-radius: 3px;
+        padding: .85em 1em;
+        font-size: .9rem;
+        margin: 20px 5px 0 5px;
+    }
+}

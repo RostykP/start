@@ -98,17 +98,28 @@
                         '<td><select disabled>' + output + '</select></td>' + // Category
                         '<td><input name="link" value="' + value.url + '" type="text" disabled> </td>' + // URL
                         '<td><input name="country" type="text" value="' + value.country + '" disabled></td>' + // Country
-                        '<td class="js-code"><input type="text" readonly="readonly" value="JS code" disabled></td>' + // JS code
-                        '<td><input type="number" name="amount" value="' + value.amount + '" disabled></td>' + // Amount
+                        '<td class="js-code"><input type="text" onfocus="this.blur()" onkeydown="return false;"   value="JS code" disabled></td>' + // JS code
+                        '<td><input type="number" min="1" name="amount" value="' + value.amount + '" disabled></td>' + // Amount
                         '<td class="status"><div class="switch"><input disabled class="switch-input" id="status-' + value.id + '" type="checkbox" checked="" name="status"><label class="switch-paddle" for="status-' + value.id + '"></label></div></td>' + // Status
-                        '<td><div class="columns small-6 text-center"><button type="button" class="button small">Edit</button></div><div class="columns small-6 text-center"><button type="button" class="button alert small">Delete</button></div></td>' + // Actions
+                        '<td><div class="columns small-6 text-center"><button type="button" class="button small edit">Edit</button></div><div class="columns small-6 text-center"><button type="button" class="button alert small delete">Delete</button></div>' +
+                        '<div class="columns small-6 text-center"><button type="button" class="button small success  save hidden">Save</button></div><div class="columns small-6 text-center"><button type="button" class="button alert small cancel hidden">Cancel</button></div></td>' + // Actions
                         '</tr>';
 
                 });
 
                 goods_table.find('tbody').html(table);
+                goods_table.find('select').select2({
+                    "language": {
+                        "noResults": function () {
+                            return "There are no category. Will be crate new one with current nume";
+                        }
+                    },
+                    escapeMarkup: function (markup) {
+                        return markup;
+                    }
+                });
             }
-            console.log(array_category);
+
         }
 
 
@@ -303,11 +314,111 @@
 
     //offers________________________________
 
-    $doc.on('click', '.js-code', function (e) {
+    //call js code modal box
+    $doc.on('click', '.js-code input:not(:disabled)', function (e) {
         popupS.window({
             mode: 'alert',
             content: 'Hey'
         });
-    })
+    });
+
+    //edit offers button
+    $doc.on('click', '#goods .edit', function (e) {
+        var _table = $(this).parents('tr');
+
+        _table.find('input, select').prop('disabled', 'false').removeAttr("disabled")
+        _table.find('button.edit,button.delete').addClass('hidden');
+        _table.find('button.save,button.cancel').removeClass('hidden');
+    });
+
+
+    //cancel button
+    $doc.on('click', '#goods .cancel', function (e) {
+        var _table = $(this).parents('tr');
+
+        _table.find('input, select').prop('disabled', 'true').attr("disabled");
+        _table.find('button.save,button.cancel').addClass('hidden');
+        _table.find('button.edit,button.delete').removeClass('hidden');
+    });
+
+    //delete button
+    $doc.on('click', '#goods .delete', function (e) {
+        var _table = $(this).parents('tr');
+
+        popupS.confirm({
+            content: 'Do you want to delete a current category?',
+            onSubmit: function () {
+                _table.remove();
+                //remove categort getResp();
+            }
+        });
+    });
+
+    //save button
+    $doc.on('click', '#goods .save', function (e) {
+        var _table = $(this).parents('tr');
+
+
+        var data = {};
+        data.sid = $.cookie('sid');
+        data.id = parseInt(_table.data('cat-id'));
+        data.country = _table.find('input[name=country]').val();
+        data.name = btoa(_table.find('select').val());
+
+        //validate URL
+        if (isUrlValid(_table.find('input[name=link]').val())) {
+            data.url = btoa(_table.find('input[name=link]').val());
+            _table.find('input[name=link]').removeClass('error');
+        } else _table.find('input[name=link]').addClass('error');
+
+
+        // data.js = _table.find('input[name=link]').val();
+        data.state = (_table.find('input.switch-input').is(':checked')) ? 1 : 0;
+
+        if (_table.find('input[name=amount]').val() > 0) {
+            data.amount = parseInt(_table.find('input[name=amount]').val());
+            _table.find('input[name=amount]').removeClass('error');
+        } else _table.find('input[name=amount]').addClass('error');
+
+        //save data
+        if (_table.find('.error').length == 0) {
+            var result = getResp({'sid':$.cookie('sid')},'offer/update/');
+            console.log(result);
+        }
+
+    });
+
+    $doc.on('keydown', '#goods input[name=amount]', function (e) {
+        // Allow: backspace, delete, tab, escape, enter and .
+        if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
+            // Allow: Ctrl+A, Command+A
+            (e.keyCode == 65 && ( e.ctrlKey === true || e.metaKey === true ) ) ||
+            // Allow: home, end, left, right, down, up
+            (e.keyCode >= 35 && e.keyCode <= 40)) {
+            // let it happen, don't do anything
+            return;
+        }
+        // Ensure that it is a number and stop the keypress
+        if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+            e.preventDefault();
+        }
+    });
+
+
+    function isUrlValid(url) {
+        return /^(https?|s?ftp):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i.test(url);
+    }
+
+    if (!window.btoa) {
+        window.btoa = function(str) {
+            return Base64.encode(str);
+        }
+    }
+
+    if (!window.atob) {
+        window.atob = function(str) {
+            return Base64.decode(str);
+        }
+    }
 
 }(jQuery, window, document));

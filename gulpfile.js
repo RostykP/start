@@ -14,6 +14,7 @@ var js_arr = [
     'node_modules/bootstrap-daterangepicker/daterangepicker.js',
     'node_modules/jquery.cookie/jquery.cookie.js',
     'node_modules/fancybox/dist/js/jquery.fancybox.pack.js',
+    'node_modules/select2/dist/js/select2.js',
     'node_modules/popups/dist/popupS.js',
     'js/custom/*.js'
 ];
