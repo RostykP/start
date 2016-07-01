@@ -122,3 +122,34 @@
 #delete_task_id{
     padding: .57em 0.66em;
 }
+
+table{
+    background: #FFFFFF;
+    border: solid 1px #DDDDDD;
+    margin-bottom: 1.11111rem;
+    table-layout: auto;
+
+    &#all-user-table{
+        text-align: center;
+        th,td{
+            input{
+                margin: 0;
+                box-shadow: none;
+                border-radius: 0;
+                border: none;
+            }
+            border: 1px solid #DDDDDD;
+        }
+    }
+}
+table thead {
+    background: #F5F5F5;
+}
+table thead tr th, table thead tr td {
+    color: #222222;
+    border: 1px solid #DDDDDD;
+    font-size: 0.77778rem;
+    font-weight: bold;
+    padding: 0.44444rem 0.55556rem 0.55556rem;
+
+}
