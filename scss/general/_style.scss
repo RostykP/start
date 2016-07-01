@@ -90,6 +90,7 @@
     }
 }
 #prod-info{
+    font-weight: bold;
     line-height: 40px;
 }
 .hidden{
@@ -99,6 +100,7 @@
     clear: both;
 }
 #status{
+    padding: .57em 0.66em;
     font-weight: bold;
     &.button[data-status="1"]{
         background: #d6d65c;
@@ -116,4 +118,7 @@
 #quick-search{
     width: 100%;
     max-width: 50px;
+}
+#delete_task_id{
+    padding: .57em 0.66em;
 }
