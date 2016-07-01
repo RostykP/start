@@ -1,4 +1,4 @@
-#all-user-table th{
+#all-user-table th, td{
     border:1px solid black;
 }
 #all-user-table{
