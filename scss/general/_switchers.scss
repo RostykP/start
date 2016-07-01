@@ -103,7 +103,7 @@ input:checked + label > .switch-inactive {
 .switch.large input:checked ~ .switch-paddle::after {
     left: 2.75rem; }
 
-#all-users{
+#all-users,#good{
     &.active{
         .switch-paddle{
             background: #ff3b30;

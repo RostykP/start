@@ -124,12 +124,13 @@
 }
 
 table{
+    width: 100%;
     background: #FFFFFF;
     border: solid 1px #DDDDDD;
     margin-bottom: 1.11111rem;
     table-layout: auto;
 
-    &#all-user-table{
+    &#all-user-table, &#goods{
         text-align: center;
         th,td{
             input{
@@ -139,6 +140,12 @@ table{
                 border: none;
             }
             border: 1px solid #DDDDDD;
+            .switch,button{
+                margin: 0;
+            }
+            .switch-paddle{
+                vertical-align: middle;
+            }
         }
     }
 }
@@ -146,6 +153,7 @@ table thead {
     background: #F5F5F5;
 }
 table thead tr th, table thead tr td {
+
     color: #222222;
     border: 1px solid #DDDDDD;
     font-size: 0.77778rem;
