@@ -235,22 +235,22 @@
                 // if(!((window.location.href).indexOf('login') != -1)){
                 //     window.location.href = $(location).attr('href')+'login.html';
                 // }
-
+                console.log(thrownError)
                 myVariable = false;
             }
 
         });
-
-        if (myVariable.result === true && myVariable) { //if valid session
-            return myVariable;
-        } else {
-            if (myVariable.result === false && (myVariable.msg).indexOf('invalid session') == -1) {
-                return myVariable;
-            } else if (!((window.location.href).indexOf('index') != -1)) {
-                window.location.href = $(location).attr('href').slice(0, -13);
-                return false;
-            }
-        }
+        return myVariable;
+        // if (myVariable.result === true && myVariable) { //if valid session
+        //     return myVariable;
+        // } else {
+        //     if (myVariable.result === false && (myVariable.msg).indexOf('invalid session') == -1) {
+        //         return myVariable;
+        //     } else if (!((window.location.href).indexOf('index') != -1)) {
+        //         window.location.href = $(location).attr('href').slice(0, -13);
+        //         return false;
+        //     }
+        // }
 
 
     }
@@ -363,16 +363,16 @@
         data.sid = $.cookie('sid');
         data.id = parseInt(_table.data('cat-id'));
         data.country = _table.find('input[name=country]').val();
-        data.name = btoa(_table.find('select').val());
+        data.name = encodeURIComponent(_table.find('select').val());
 
         //validate URL
         if (isUrlValid(_table.find('input[name=link]').val())) {
-            data.url = btoa(_table.find('input[name=link]').val());
+            data.url = encodeURIComponent(_table.find('input[name=link]').val());
             _table.find('input[name=link]').removeClass('error');
         } else _table.find('input[name=link]').addClass('error');
 
-
-        // data.js = _table.find('input[name=link]').val();
+        data.js = "";
+         // data.js = _table.find('input[name=link]').val();
         data.state = (_table.find('input.switch-input').is(':checked')) ? 1 : 0;
 
         if (_table.find('input[name=amount]').val() > 0) {
@@ -382,10 +382,27 @@
 
         //save data
         if (_table.find('.error').length == 0) {
-            var result = getResp({'sid':$.cookie('sid')},'offer/update/');
-            console.log(result);
+            var result = getResp({'sid':$.cookie('sid'),'id':data.id,'country':data.country,'name':data.name,'url':data.url,'amount':data.amount,'state':1},'offer/update/');
+            console.log({'sid':$.cookie('sid'),'id':data.id,'country':data.country,'name':data.name,'url':data.url,'amount':10, 'state':1});
         }
 
+    });
+
+
+    $doc.on('click','#wrapper .add-good',function (e) {
+        var table = $('#goods'),
+            last_id = parseInt(table.find('tr:last-child td:first-child').text())+1;
+
+        $('#goods tbody').append('<tr>' +
+            '<td>'+last_id+'</td>' +
+            '<td></td>' +
+            '<td><input name="link" value="" type="text" disabled=""></td>' +
+            '<td><input name="country" type="text" value="" disabled=""></td>' +
+            '<td class="js-code"><input type="text" onfocus="this.blur()" onkeydown="return false;" value="JS code" disabled=""></td>' +
+            '<td><input type="number" min="1" name="amount" value="1" disabled=""></td>' +
+            '<td class="status"><div class="switch"><input disabled="" class="switch-input" id="status-'+last_id+'" type="checkbox" checked="" name="status"><label class="switch-paddle" for="status-'+last_id+'"></label></div></td>' +
+            '<td><div class="columns small-6 text-center"><button type="button" class="button small edit">Edit</button></div><div class="columns small-6 text-center"><button type="button" class="button alert small delete">Delete</button></div><div class="columns small-6 text-center"><button type="button" class="button small success  save hidden">Save</button></div><div class="columns small-6 text-center"><button type="button" class="button alert small cancel hidden">Cancel</button></div></td>' +
+            '</tr>');
     });
 
     $doc.on('keydown', '#goods input[name=amount]', function (e) {
