@@ -95,12 +95,12 @@
 
                     table += '<tr data-cat-id="' + value.id + '">' +
                         '<td>' + (key + 1) + '</td>' + // №
-                        '<td><select disabled>' + output + '</select></td>' + // Category
-                        '<td><input name="link" value="' + value.url + '" type="text" disabled> </td>' + // URL
-                        '<td><input name="country" type="text" value="' + value.country + '" disabled></td>' + // Country
+                        '<td><select disabled data-current = "' + value.id + '">' + output + '</select></td>' + // Category
+                        '<td><input data-current="' + value.url + '" name="link" value="' + value.url + '" type="text" disabled> </td>' + // URL
+                        '<td><input data-current="' + value.country + '" name="country" type="text" value="' + value.country + '" disabled></td>' + // Country
                         '<td class="js-code"><input type="text" onfocus="this.blur()" onkeydown="return false;"   value="JS code" disabled></td>' + // JS code
-                        '<td><input type="number" min="1" name="amount" value="' + value.amount + '" disabled></td>' + // Amount
-                        '<td class="status"><div class="switch"><input disabled class="switch-input" id="status-' + value.id + '" type="checkbox" checked="" name="status"><label class="switch-paddle" for="status-' + value.id + '"></label></div></td>' + // Status
+                        '<td><input data-current="' + value.amount + '" type="number" min="1" name="amount" value="' + value.amount + '" disabled></td>' + // Amount
+                        '<td class="status"><div class="switch"><input data-current="' + value.id + '" disabled class="switch-input" id="status-' + value.id + '" type="checkbox" checked="" name="status"><label class="switch-paddle" for="status-' + value.id + '"></label></div></td>' + // Status
                         '<td><div class="columns small-6 text-center"><button type="button" class="button small edit">Edit</button></div><div class="columns small-6 text-center"><button type="button" class="button alert small delete">Delete</button></div>' +
                         '<div class="columns small-6 text-center"><button type="button" class="button small success  save hidden">Save</button></div><div class="columns small-6 text-center"><button type="button" class="button alert small cancel hidden">Cancel</button></div></td>' + // Actions
                         '</tr>';
@@ -108,16 +108,8 @@
                 });
 
                 goods_table.find('tbody').html(table);
-                goods_table.find('select').select2({
-                    "language": {
-                        "noResults": function () {
-                            return "There are no category. Will be crate new one with current nume";
-                        }
-                    },
-                    escapeMarkup: function (markup) {
-                        return markup;
-                    }
-                });
+                callSelect(goods_table);
+
             }
 
         }
@@ -326,7 +318,7 @@
     $doc.on('click', '#goods .edit', function (e) {
         var _table = $(this).parents('tr');
 
-        _table.find('input, select').prop('disabled', 'false').removeAttr("disabled")
+        _table.find('input, select').prop('disabled', 'false').removeAttr("disabled");
         _table.find('button.edit,button.delete').addClass('hidden');
         _table.find('button.save,button.cancel').removeClass('hidden');
     });
@@ -334,8 +326,30 @@
 
     //cancel button
     $doc.on('click', '#goods .cancel', function (e) {
-        var _table = $(this).parents('tr');
+        var _table = $(this).parents('tr'),
+            _td = _table.find('td');
 
+        //set previous values
+        $.each(_td, function (key, value) {
+            var _this = $(this),
+                _input = _this.find('input'),
+                _select = _this.find('select');
+
+            if (_input.length > 0 && _input.attr('data-current')) {
+                if (_input.val() != _input.attr('data-current')) {
+                    _input.val(_input.attr('data-current'))
+                }
+            } else {
+                if (_select.attr('data-id') != _select.attr('data-current')) {
+                    _select.find('option[data-id=' + _select.attr('data-current') + ']').attr("selected", "selected");
+                    var sel = _select.find('option[data-id=' + _select.attr('data-current') + ']').text();
+                    _select.next().find('.select2-selection__rendered').html(sel)
+                }
+            }
+        });
+
+
+        _table.removeClass('were-edit');
         _table.find('input, select').prop('disabled', 'true').attr("disabled");
         _table.find('button.save,button.cancel').addClass('hidden');
         _table.find('button.edit,button.delete').removeClass('hidden');
@@ -362,17 +376,21 @@
         var data = {};
         data.sid = $.cookie('sid');
         data.id = parseInt(_table.data('cat-id'));
-        data.country = _table.find('input[name=country]').val();
+        if (_table.find('input[name=country]').val() != '') {
+            data.country = _table.find('input[name=country]').val();
+            _table.find('input[name=country]').removeClass('error');
+        } else _table.find('input[name=country]').addClass('error');
+
         data.name = encodeURIComponent(_table.find('select').val());
 
         //validate URL
         if (isUrlValid(_table.find('input[name=link]').val())) {
-            data.url = encodeURIComponent(_table.find('input[name=link]').val());
+            data.url = (_table.find('input[name=link]').val());
             _table.find('input[name=link]').removeClass('error');
         } else _table.find('input[name=link]').addClass('error');
 
         data.js = "";
-         // data.js = _table.find('input[name=link]').val();
+        // data.js = _table.find('input[name=link]').val();
         data.state = (_table.find('input.switch-input').is(':checked')) ? 1 : 0;
 
         if (_table.find('input[name=amount]').val() > 0) {
@@ -380,29 +398,41 @@
             _table.find('input[name=amount]').removeClass('error');
         } else _table.find('input[name=amount]').addClass('error');
 
+
         //save data
         if (_table.find('.error').length == 0) {
-            var result = getResp({'sid':$.cookie('sid'),'id':data.id,'country':data.country,'name':data.name,'url':data.url,'amount':data.amount,'state':1},'offer/update/');
-            console.log({'sid':$.cookie('sid'),'id':data.id,'country':data.country,'name':data.name,'url':data.url,'amount':10, 'state':1});
+
+            var url = 'offer/update/';
+            if ($(this).hasClass('create-new')) {
+                url = 'offer/create/';
+                delete data.id; //remove id if new one
+            }
+
+            var result = getResp(data, url);
+            console.log(data);
         }
 
     });
 
 
-    $doc.on('click','#wrapper .add-good',function (e) {
+    $doc.on('click', '#wrapper .add-good', function (e) {
         var table = $('#goods'),
-            last_id = parseInt(table.find('tr:last-child td:first-child').text())+1;
+            category_list = table.find('tr:first-child td:nth-child(2) select').html(),
+            last_id = parseInt(table.find('tr:last-child td:first-child').text()) + 1;
 
-        $('#goods tbody').append('<tr>' +
-            '<td>'+last_id+'</td>' +
-            '<td></td>' +
-            '<td><input name="link" value="" type="text" disabled=""></td>' +
-            '<td><input name="country" type="text" value="" disabled=""></td>' +
-            '<td class="js-code"><input type="text" onfocus="this.blur()" onkeydown="return false;" value="JS code" disabled=""></td>' +
-            '<td><input type="number" min="1" name="amount" value="1" disabled=""></td>' +
-            '<td class="status"><div class="switch"><input disabled="" class="switch-input" id="status-'+last_id+'" type="checkbox" checked="" name="status"><label class="switch-paddle" for="status-'+last_id+'"></label></div></td>' +
-            '<td><div class="columns small-6 text-center"><button type="button" class="button small edit">Edit</button></div><div class="columns small-6 text-center"><button type="button" class="button alert small delete">Delete</button></div><div class="columns small-6 text-center"><button type="button" class="button small success  save hidden">Save</button></div><div class="columns small-6 text-center"><button type="button" class="button alert small cancel hidden">Cancel</button></div></td>' +
+
+        table.append('<tr>' +
+            '<td>' + last_id + '</td>' +
+            '<td><select>' + category_list + '</select></td>' +
+            '<td><input name="link" value="" type="text" ></td>' +
+            '<td><input name="country" type="text" value="" ></td>' +
+            '<td class="js-code"><input type="text" onfocus="this.blur()" onkeydown="return false;" value="JS code" ></td>' +
+            '<td><input type="number" min="1" name="amount" value="1" ></td>' +
+            '<td class="status"><div class="switch"><input class="switch-input" id="status-' + last_id + '" type="checkbox" checked="" name="status"><label class="switch-paddle" for="status-' + last_id + '"></label></div></td>' +
+            '<td><div class="columns small-6 text-center"><button type="button" class="button small edit hidden">Edit</button></div><div class="columns small-6 text-center"><button type="button" class="button alert small delete hidden">Delete</button></div><div class="columns small-6 text-center"><button type="button" class="button small success save create-new">Save</button></div><div class="columns small-6 text-center"><button type="button" class="button alert small cancel">Cancel</button></div></td>' +
             '</tr>');
+
+        callSelect(table); //reinitialize select2
     });
 
     $doc.on('keydown', '#goods input[name=amount]', function (e) {
@@ -422,20 +452,44 @@
     });
 
 
+    //check if were changes in table
+    $doc.on('keypress change', '#goods input, #goods select', function (e) {
+        $(this).parents('tr').addClass('were-edit');
+    });
+
     function isUrlValid(url) {
         return /^(https?|s?ftp):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i.test(url);
     }
 
     if (!window.btoa) {
-        window.btoa = function(str) {
+        window.btoa = function (str) {
             return Base64.encode(str);
         }
     }
 
     if (!window.atob) {
-        window.atob = function(str) {
+        window.atob = function (str) {
             return Base64.decode(str);
         }
     }
+
+    function callSelect(el) {
+        el.find('select').select2({
+            tags: true
+        });
+
+    }
+
+
+    //check if there are no changes not saving
+    $(window).on('beforeunload', function () {
+        // var table = $('#goods'),
+        //     table_tr = table.find('tbody tr');
+        //  if(table.length>0){
+        //      $.each(table_tr,function (key,value) {
+        //
+        //      })
+        //  }
+    });
 
 }(jQuery, window, document));
