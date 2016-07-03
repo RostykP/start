@@ -3,71 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <title>Project</title>
-    <link rel="stylesheet" href="css/main.css" type="text/css" media="screen" />
-    <link rel="stylesheet" href="css/foundation.min.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="css/main.css" type="text/css" media="screen"/>
+    <link rel="stylesheet" href="css/foundation.min.css" type="text/css" media="screen"/>
 
 </head>
 
 <body>
-<div class="wrapper" id="wrapper">
-    <div class="columns medium-2 small-3 end"><a href="#" id="task-page" class="button filter">Tasks</a></div>
-    <div class="columns medium-2 small-3 end"><a href="#" id="user-page" class="button filter">Users</a></div>
-
+<div class="wrapper goods" id="wrapper">
     <div class="row">
-        <div class="clearfix"></div>
-        <div>
-            <button class="add-good button small float-left">Add</button>
-            <div class="medium-1 small-3 float-right text-right">
-                <select  id="per-page">
-                    <option value="5" selected>5</option>
-                    <option value="10">10</option>
-                    <option value="20" >20</option>
-                    <option value="40">40</option>
-                    <option value="all">All</option>
-                </select>
+        <div class="small-12 columns">
+            <div class="goods-links row collapse">
+                <a href="#" id="task-page" class="button filter">Tasks</a>
+                <a href="#" id="user-page" class="button filter">Users</a>
             </div>
 
-        </div>
-        <table id="goods">
-            <thead>
-            <tr>
-                <th style="width: 5%">№</th>
-                <th style="width: 20%">Category</th>
-                <th style="width: 18%">Name (URL)</th>
-                <th style="width: 15%">Country</th>
-                <th style="width: 7%">Detail (JS)</th>
-                <th style="width: 5%">Amount</th>
-                <th style="width: 15%">Status</th>
-                <th style="width: 15%">Action</th>
-            </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
-        <div>
-            <button class="add-good button small">Add</button>
-            <div id="pagination"><ul></ul></div>
+            <div class="row">
+                <div class="clearfix"></div>
+                <div class="filter-goods">
+                    <button class="add-good button small float-left">Add</button>
+                    <div class="medium-1 small-3 float-right text-right">
+                        <select id="per-page">
+                            <option value="10">10</option>
+                            <option value="20" selected>20</option>
+                            <option value="40">40</option>
+                            <option value="all">All</option>
+                        </select>
+                    </div>
+
+                </div>
+                <div class="goods-table">
+                    <table id="goods">
+                        <thead>
+                        <tr>
+                            <th style="width: 5%">№</th>
+                            <th style="width: 20%">Category</th>
+                            <th style="width: 18%">Name (URL)</th>
+                            <th style="width: 15%">Country</th>
+                            <th style="width: 7%">Detail (JS)</th>
+                            <th style="width: 5%">Amount</th>
+                            <th style="width: 15%">Status</th>
+                            <th style="width: 15%">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    <button style="margin: 0" class="add-good button small">Add</button>
+                    <div id="pagination" class="pagination" role="navigation">
+                        <ul></ul>
+                    </div>
+                </div>
+
+
+            </div>
         </div>
     </div>
+
+
 </div>
 
 <script type="text/javascript" src="js/jquery.min.js"></script>
 <script>
-    if((document.referrer.indexOf('taskpage') === -1) && (document.referrer.indexOf('users') === -1)){
+    if ((document.referrer.indexOf('taskpage') === -1) && (document.referrer.indexOf('users') === -1)) {
         var link = $(location).attr('href');
         var linkArr = link.split("//");
         var linkArr2 = linkArr[1].split("/");
         var length = linkArr2.length;
         var startLink = "http://";
-        for(var i=0; i<(length-1); i++){
-            startLink = startLink + linkArr2[i]+"/";
+        for (var i = 0; i < (length - 1); i++) {
+            startLink = startLink + linkArr2[i] + "/";
         }
         console.log(startLink);
         window.location.href = startLink;
     }
 </script>
 <script type="text/javascript" src="js/main.min.js"></script>
-
 
 
 </body>

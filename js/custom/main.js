@@ -341,9 +341,12 @@
 
     $window.on('resize', function () {
 
-        $('#wrapper').height(Math.max(document.documentElement.clientHeight, window.innerHeight || 0) - 40);
+        $('#wrapper:not(.goods)').height(Math.max(document.documentElement.clientHeight, window.innerHeight || 0) - 40);
         $('#task_list ul').css('max-height', $('#wrapper').height() - $('.row.search').outerHeight() - $('.row.filter').outerHeight() + 'px');
         $('#product-data-d').height($('#wrapper').height() - $('.row.filter').outerHeight() - $('#show-product-info').outerHeight() - 40);
+        // if($('#goods').length>0){
+        //     $('#wrapper div.goods-table').height($('#wrapper').height() - $('.row.filter-goods').outerHeight() - $('div.goods-links').outerHeight());
+        // }
 
     });
 
@@ -520,7 +523,7 @@
 
     });
 
-
+    //add new category
     $doc.on('click', '#wrapper .add-good', function (e) {
         var table = $('#goods'),
             category_list = table.find('tr:first-child td:nth-child(2) select').html(),
@@ -529,7 +532,7 @@
 
         //if there no any news <tr>
         if (is_new.length == 0) {
-
+            $('#pagination ul li:last-child a').click();
             table.append('<tr class="new">' +
                 '<td>' + last_id + '</td>' +
                 '<td><select>' + category_list + '</select></td>' +
@@ -581,26 +584,34 @@
             pages = Math.ceil(count / show_on_page),
             list = '';
 
-        _tr.show();
-        _table.find('tbody tr:gt(' + (show_on_page - 1) + ')').hide();
+        if(pages > 1){
+            _tr.show();
+            _table.find('tbody tr:gt(' + (show_on_page - 1) + ')').hide();
 
-        for (var i = 1; i <= pages; i++) {
-            list += '<a href="#">'+i+'</a>';
+            for (var i = 1; i <= pages; i++) {
+                if(i == 1){
+                    list += '<li class="current"><a href="#">'+i+'</a></li>';
+                }else  list += '<li><a href="#">'+i+'</a></li>';
+            }
+            pagination.attr('per-page',show_on_page);
+            pagination.html(list);
         }
-        pagination.attr('per-page',show_on_page);
-        pagination.html(list);
+
 
     });
 
-    $doc.on('click','#pagination a',function (e) {
+    $doc.on('click','#pagination li a',function (e) {
        e.preventDefault();
 
         var _table = $('#goods'),
             _tr = _table.find('tbody tr'),
-            show_on_page = parseInt($(this).parent().attr('per-page')),
+            show_on_page = parseInt($(this).parents('ul').attr('per-page')),
             current = parseInt($(this).text()),
             gt=0,
             lt = 0;
+
+        $(this).parents('ul').find('.current').removeClass('current');
+        $(this).parent().addClass('current');
 
         if(current == 1){
             lt =  show_on_page;
