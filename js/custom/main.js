@@ -332,7 +332,7 @@
         $('#product-data-d').html(decodeURIComponent(escape(window.atob(a.data))));
         $(".screenshot-list").html("");
         $.each(a.images, function (i) {
-            $(".screenshot-list").append('<li><a class="fancybox" rel="group" href="data:image/png;base64,' + a.images[i].data + '"> <img  src="data:image/png;base64,' + a.images[i].data + '" alt=""/></a></li>');
+            $(".screenshot-list").append('<li><a class="fancybox" rel="group" href="data:image/png;base64,' + a.images[i].data + '"> <img width="150" height="150" src="data:image/png;base64,' + a.images[i].data + '" alt=""/></a></li>');
         });
 
         $(this).addClass('active');
