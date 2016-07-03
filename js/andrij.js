@@ -2,9 +2,19 @@
  * Created by Slavic_Gutnyk on 6/27/2016.
  */
 $(document).ready(function () {
+
+    $("#task-page").click(function () {
+        window.location.href = $(location).attr('href').slice(0, -10)+ 'taskpage.html';
+    });
+    $("#goods-page-from-user").click(function () {
+        window.location.href = $(location).attr('href').slice(0, -10)+ 'goods.html';
+    });
+    $("#goods-page").click(function () {
+        window.location.href = $(location).attr('href').slice(0, -13)+ 'goods.html';
+    });
     var newUser = 0;
     $("#user-page").click(function () {
-        window.location.href = $(location).attr('href').slice(0, -13)+ 'users.html';
+        window.location.href = $(location).attr('href').slice(0, -10)+ 'users.html';
     });
 
      var sid = $.cookie('sid');
