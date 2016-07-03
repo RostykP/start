@@ -308,9 +308,9 @@
 
     //call js code modal box
     $doc.on('click', '.js-code input:not(:disabled)', function (e) {
-        popupS.window({
-            mode: 'alert',
-            content: 'Hey'
+        $.MessageBox({
+            width:"70%",
+            message:'<div class="js-open"><textarea name="js" rows="4"></textarea></div>'
         });
     });
 
