@@ -115,7 +115,7 @@
                         '<td><select disabled data-current = "' + value.id + '">' + output + '</select></td>' + // Category
                         '<td><input data-current="' + value.url + '" name="link" value="' + value.url + '" type="text" disabled> </td>' + // URL
                         '<td><input data-current="' + value.country + '" name="country" type="text" value="' + value.country + '" disabled></td>' + // Country
-                        '<td class="js-code"><input type="text" onfocus="this.blur()" onkeydown="return false;"   value="JS code" disabled></td>' + // JS code
+                        '<td class="js-code"><input type="text" onfocus="this.blur()" onkeydown="return false;"   value="JS code" disabled><textarea class="hidden">'+value.js+'</textarea></td>' + // JS code
                         '<td><input data-current="' + value.amount + '" type="number" min="1" name="amount" value="' + value.amount + '" disabled></td>' + // Amount
                         '<td class="status"><div class="switch"><input data-current="' + value.state + '" disabled class="switch-input" id="status-' + value.id + '" type="checkbox" ' + status + ' name="status"><label class="switch-paddle" for="status-' + value.id + '"></label></div></td>' + // Status
                         '<td><div class="columns small-6 text-center"><button type="button" class="button small edit">Edit</button></div><div class="columns small-6 text-center"><button type="button" class="button alert small delete">Delete</button></div>' +
@@ -355,18 +355,27 @@
 
     //call js code modal box
     $doc.on('click', '.js-code input:not(:disabled)', function (e) {
-        popupS.modal({
+		var textarea = $(this).parent().find("textarea");
+		var editor;
+        popupS.confirm({
             mode: 'modal',
-            title: 'Title',
-            content: '<div><textarea id="editor" name="js" rows="5"></textarea> </div>',
+            title: 'Detail JS',
+            content: '<div><textarea id="editor" name="js" width="400px">'+$(textarea).html()+'</textarea> </div>',
             className: 'additionalClass',  // for additional styling, gets append on every popup div
             placeholder: 'Input Text',     // only available for mode: 'prompt'
             flagCloseByEsc: false,
-            onOpen: function () {
-
-
+			flagCloseByOverlay: false, 
+			labelOk:     'Yes',
+			labelCancel: 'No',
+			onOpen: function () {
+				var myTextarea = document.getElementById("editor");
+				editor = CodeMirror.fromTextArea(myTextarea, {
+					lineNumbers: true,
+					mode:  "javascript"	
+				});
             },      // gets called when popup is opened
             onSubmit: function (val) {
+				$(textarea).html(editor.getValue());
             }, // gets called when submitted. val as an paramater for prompts
             onClose: function () {
             }      // gets called when popup is closed
@@ -461,7 +470,7 @@
         } else _table.find('input[name=link]').addClass('error');
 
         data.js = "";
-        // data.js = _table.find('input[name=link]').val();
+        data.js = _table.find('textarea').html();
         data.state = (_table.find('input.switch-input').is(':checked')) ? 1 : 0;
 
         if (_table.find('input[name=amount]').val() > 0) {
@@ -538,7 +547,7 @@
                 '<td><select>' + category_list + '</select></td>' +
                 '<td><input name="link" value="" type="text" ></td>' +
                 '<td><input name="country" type="text" value="" ></td>' +
-                '<td class="js-code"><input type="text" onfocus="this.blur()" onkeydown="return false;" value="JS code" ></td>' +
+                '<td class="js-code"><input type="text" onfocus="this.blur()" onkeydown="return false;" value="JS code" ><textarea class="hidden"></textarea></td></td>' +
                 '<td><input type="number" min="1" name="amount" value="1" ></td>' +
                 '<td class="status"><div class="switch"><input class="switch-input" id="status-' + last_id + '" type="checkbox" checked="" name="status"><label class="switch-paddle" for="status-' + last_id + '"></label></div></td>' +
                 '<td><div class="columns small-6 text-center"><button type="button" class="button small edit hidden">Edit</button></div><div class="columns small-6 text-center"><button type="button" class="button alert small delete hidden">Delete</button></div><div class="columns small-6 text-center"><button type="button" class="button small success save create-new">Save</button></div><div class="columns small-6 text-center"><button type="button" class="button alert small cancel">Cancel</button></div></td>' +
