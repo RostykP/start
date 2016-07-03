@@ -16,20 +16,7 @@ $(document).ready(function () {
     //     console.log(newLink);
     //
     // });
-    $("#task-page").click(function () {
-        window.location.href = getStartLink()+ 'taskpage.html';
-    });
-    $("#goods-page-from-user").click(function () {
-        window.location.href = getStartLink()+ 'goods.html';
-    });
-    $("#goods-page").click(function () {
-        window.location.href = getStartLink()+ 'goods.html';
-    });
-    var newUser = 0;
-    $("#user-page").click(function () {
-        window.location.href = getStartLink()+ 'users.html';
-    });
-
+   
      var sid = $.cookie('sid');
      var users = getResp1({"sid": sid}, "user/list/");
     console.log(users);
@@ -234,20 +221,7 @@ $(document).ready(function () {
 
 });
 
-//get task
-function getStartLink(){
-    console.log($(location).attr('href'));
-    var link = $(location).attr('href');
-    var linkArr = link.split("//");
-    var linkArr2 = linkArr[1].split("/");
-    var length = linkArr2.length;
-    var startLink = "http://";
-    for(var i=0; i<(length-1); i++){
-        startLink = startLink + linkArr2[i]+"/";
-    }
-    console.log(startLink);
-    return startLink;
-}
+
 
 function getResp1(data, url) {
     var myVariable;

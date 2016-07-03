@@ -14,6 +14,22 @@
 
         $(".fancybox").fancybox();
 
+
+        $("#task-page").click(function () {
+            window.location.href = getStartLink() + 'taskpage.html';
+        });
+        $("#goods-page-from-user").click(function () {
+            window.location.href = getStartLink() + 'goods.html';
+        });
+        $("#goods-page").click(function () {
+            window.location.href = getStartLink() + 'goods.html';
+        });
+        var newUser = 0;
+        $("#user-page").click(function () {
+            window.location.href = getStartLink() + 'users.html';
+        });
+
+
         $('#current-date').html(moment().format("YYYY-MM-D"));
         $('#submit').click(function (e) {
 
@@ -110,6 +126,9 @@
 
                 goods_table.find('tbody').html(table);
                 callSelect(goods_table);
+
+                //trigger change
+                $('#per-page').change();
 
             }
 
@@ -239,7 +258,7 @@
         else {
             if (myVariable.result === false && (myVariable.msg).indexOf('invalid session') == -1) {
                 return myVariable;
-            } else  {
+            } else {
                 window.location.href = getStartLink1();
                 return false;
             }
@@ -259,20 +278,20 @@
 
     }
 
-    function getStartLink1(){
+    function getStartLink1() {
         console.log($(location).attr('href'));
         var link = $(location).attr('href');
         var linkArr = link.split("//");
         var linkArr2 = linkArr[1].split("/");
         var length = linkArr2.length;
         var startLink = "http://";
-        for(var i=0; i<(length-1); i++){
-            startLink = startLink + linkArr2[i]+"/";
+        for (var i = 0; i < (length - 1); i++) {
+            startLink = startLink + linkArr2[i] + "/";
         }
         console.log(startLink);
         return startLink;
     }
-    
+
     function getTasks(data) {
         var tasks = getResp(data, 'task/list/');
         if (tasks) {
@@ -375,7 +394,7 @@
             if (_input.length > 0 && _input.attr('data-current')) {
                 if (_input.val() != _input.attr('data-current') && _input.attr('type') != "checkbox") {
                     _input.val(_input.attr('data-current'))
-                } else if ((!(_input.is(':checked')) && _input.attr('data-current') == "1") || ((_input.is(':checked')) && _input.attr('data-current') == "0") ) { // set default status of input switch
+                } else if ((!(_input.is(':checked')) && _input.attr('data-current') == "1") || ((_input.is(':checked')) && _input.attr('data-current') == "0")) { // set default status of input switch
                     _input.click();
                 }
             } else {
@@ -551,6 +570,50 @@
         $(this).parents('tr').addClass('were-edit');
     });
 
+
+    //select count on page
+    $doc.on('change', '#per-page', function (e) {
+        var _table = $('#goods'),
+            _tr = _table.find('tbody tr'),
+            pagination = $('#pagination ul'),
+            count = _tr.length,
+            show_on_page = $(this).val(),
+            pages = Math.ceil(count / show_on_page),
+            list = '';
+
+        _tr.show();
+        _table.find('tbody tr:gt(' + (show_on_page - 1) + ')').hide();
+
+        for (var i = 1; i <= pages; i++) {
+            list += '<a href="#">'+i+'</a>';
+        }
+        pagination.attr('per-page',show_on_page);
+        pagination.html(list);
+
+    });
+
+    $doc.on('click','#pagination a',function (e) {
+       e.preventDefault();
+
+        var _table = $('#goods'),
+            _tr = _table.find('tbody tr'),
+            show_on_page = parseInt($(this).parent().attr('per-page')),
+            current = parseInt($(this).text()),
+            gt=0,
+            lt = 0;
+
+        if(current == 1){
+            lt =  show_on_page;
+        }else{
+            gt = (current-1)*show_on_page;
+            lt = current*show_on_page;
+        }
+        _tr.hide();
+        _table.find('tbody tr').slice(gt,lt).show();
+
+
+    });
+
     function isUrlValid(url) {
         return /^(https?|s?ftp):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i.test(url);
     }
@@ -597,13 +660,28 @@
     }
 
 
+    //get task
+    function getStartLink() {
+        console.log($(location).attr('href'));
+        var link = $(location).attr('href');
+        var linkArr = link.split("//");
+        var linkArr2 = linkArr[1].split("/");
+        var length = linkArr2.length;
+        var startLink = "http://";
+        for (var i = 0; i < (length - 1); i++) {
+            startLink = startLink + linkArr2[i] + "/";
+        }
+        console.log(startLink);
+        return startLink;
+    }
+
     //check if there are no changes not saving
     $(window).on('beforeunload', function (e) {
         var table = $('#goods');
 
-        if(table.find('tr.were-edit').length > 0 || table.find('tr.new').length > 0){
+        if (table.find('tr.were-edit').length > 0 || table.find('tr.new').length > 0) {
 
-           return 'Do you really want to close window tab?';
+            return 'Do you really want to close window tab?';
         }
 
     });

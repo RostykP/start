@@ -17,6 +17,15 @@
         <div class="clearfix"></div>
         <div>
             <button class="add-good button small float-left">Add</button>
+            <div class="medium-1 small-3 float-right text-right">
+                <select  id="per-page">
+                    <option value="5" selected>5</option>
+                    <option value="10">10</option>
+                    <option value="20" >20</option>
+                    <option value="40">40</option>
+                    <option value="all">All</option>
+                </select>
+            </div>
 
         </div>
         <table id="goods">
@@ -37,6 +46,7 @@
         </table>
         <div>
             <button class="add-good button small">Add</button>
+            <div id="pagination"><ul></ul></div>
         </div>
     </div>
 </div>
@@ -57,7 +67,6 @@
     }
 </script>
 <script type="text/javascript" src="js/main.min.js"></script>
-<script type="text/javascript" src="js/andrij.js"></script>
 
 
 
