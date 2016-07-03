@@ -26,7 +26,7 @@ $(document).ready(function () {
             if(users.list[i].state == 1){
                 var state = 1;
                 $("#all-user-table").append("<tr id='"+users.list[i].id+"'><td>"+count+"</td><td class='table-row'><input class ='login-row' id='"+users.list[i].login+"_deflog' type='text' value='"+users.list[i].login+"'></td>"+
-                    "<td class='table-row'><input class='pass-row' placeholder='Enter password' type='password' value=''></td><td class='table-row'>"+
+                    "<td class='table-row'><input class='pass-row' placeholder='Enter password' type='password' value='11111111'></td><td class='table-row'>"+
                     "<input id='"+state+"_defstate' class = 'switch' type='checkbox' checked></td>"+
                     "<td><div class='edit-buttons'><input id='edit-user' type='button' value='Edit'><input id='delete-user' type='button' value='Delete'></div>"+
                     "<div hidden class='save-buttons'><input id='save-user' type='button' value='Save'><input id='cancel-save-user' type='button' value='Cancel'></div></td></tr>");
@@ -34,7 +34,7 @@ $(document).ready(function () {
             } else {
                 var state = 0;
                 $("#all-user-table").append("<tr id='"+users.list[i].id+"'><td>"+count+"</td><td class='table-row'><input class ='login-row' id='"+users.list[i].login+"_deflog' type='text' value='"+users.list[i].login+"'></td>"+
-                    "<td class='table-row'><input class='pass-row' placeholder='Enter password' type='password' value=''></td><td class='table-row'>"+
+                    "<td class='table-row'><input class='pass-row' placeholder='Enter password' type='password' value='11111111'></td><td class='table-row'>"+
                     "<input id='"+state+"_defstate' class = 'switch' type='checkbox'></td>"+
                     "<td><div class='edit-buttons'><input id='edit-user' type='button' value='Edit'><input id='delete-user' type='button' value='Delete'></div>"+
                     "<div hidden class='save-buttons'><input id='save-user' type='button' value='Save'><input id='cancel-save-user' type='button' value='Cancel'></div></td></tr>");
@@ -69,6 +69,7 @@ $(document).ready(function () {
         var id = parseInt($(this).parent().parent().parent().attr('id'));
         $("#"+id+" .table-row input").attr('disabled', false);
         $("#"+id+" .table-row .lcs_wrap div").removeClass('lcs_disabled');
+        $("#"+id+" .table-row .pass-row").val('');
         $("#"+id+" .table-row .pass-row").attr('type','text');
         $("#"+id+" .edit-buttons").hide();
         $("#"+id+" .save-buttons").show();
@@ -132,6 +133,7 @@ $(document).ready(function () {
                 $("#"+id+" .edit-buttons").show();
                 $("#"+id+" .save-buttons").hide();
                 $("#"+id+" .table-row .pass-row").attr('type','password');
+                $("#"+id+" .table-row .pass-row").val('11111111');
                 $("#"+id+" .table-row .login-row").attr('id',newLogin+"_deflog");
                 $("#"+id+" .table-row .switch").attr('id',newStatus+'_defstate');
             } else {
@@ -166,6 +168,7 @@ $(document).ready(function () {
                     $("#" + id + " .edit-buttons").show();
                     $("#" + id + " .save-buttons").hide();
                     $("#" + id + " .table-row .pass-row").attr('type', 'password');
+                    $("#" + id + " .table-row .pass-row").val('11111111');
                     $("#" + id + " .table-row .login-row").attr('id', newLogin + "_deflog");
                     $("#" + id + " .table-row .switch").attr('id', newStatus + '_defstate');
                     $("#" + id).attr('id', createUser.id);
@@ -207,6 +210,7 @@ $(document).ready(function () {
             $("#" + id + " .edit-buttons").show();
             $("#" + id + " .save-buttons").hide();
             $("#" + id + " .table-row .pass-row").attr('type', 'password');
+            $("#" + id + " .table-row .pass-row").val('11111111');
         } else {
             var id =$(this).parent().parent().parent().attr('id');
             console.log(id);
