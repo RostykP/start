@@ -375,7 +375,7 @@
             if (_input.length > 0 && _input.attr('data-current')) {
                 if (_input.val() != _input.attr('data-current') && _input.attr('type') != "checkbox") {
                     _input.val(_input.attr('data-current'))
-                } else if (!(_input.is(':checked')) && _input.attr('data-current') == "1") { // set default status of input switch
+                } else if ((!(_input.is(':checked')) && _input.attr('data-current') == "1") || ((_input.is(':checked')) && _input.attr('data-current') == "0") ) { // set default status of input switch
                     _input.click();
                 }
             } else {
