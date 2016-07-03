@@ -43,12 +43,26 @@
 </div>
 
 <script type="text/javascript" src="js/jquery.min.js"></script>
+<script>
+    console.log(document.referrer);
+    if((document.referrer.indexOf('taskpage') === -1) && (document.referrer.indexOf('users') === -1)){
+        var link = $(location).attr('href');
+        var linkArr = link.split("//");
+        var linkArr2 = linkArr[1].split("/");
+        var length = linkArr2.length;
+        var startLink = "http://";
+        for(var i=0; i<(length-1); i++){
+            startLink = startLink + linkArr2[i]+"/";
+        }
+        console.log(startLink);
+        window.location.href = startLink;
+    }
+</script>
 <script type="text/javascript" src="js/main.min.js"></script>
 <script type="text/javascript" src="js/messagebox.min.js"></script>
 <script type="text/javascript" src="js/lc_switch.min.js"></script>
 <script type="text/javascript" src="js/lc_switch.js"></script>
 <script type="text/javascript" src="js/andrij.js"></script>
-
 
 </body>
 </html>

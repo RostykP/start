@@ -3,18 +3,31 @@
  */
 $(document).ready(function () {
 
+    // $("#test").click(function () {
+    //     console.log($(location).attr('href'));
+    //     var link = $(location).attr('href');
+    //     var linkArr = link.split("//");
+    //     var linkArr2 = linkArr[1].split("/");
+    //     var length = linkArr2.length;
+    //     var newLink = "http://";
+    //     for(i=0; i<(length-1); i++){
+    //         newLink = newLink + linkArr2[i]+"/";
+    //     }
+    //     console.log(newLink);
+    //
+    // });
     $("#task-page").click(function () {
-        window.location.href = $(location).attr('href').slice(0, -10)+ 'taskpage.html';
+        window.location.href = getStartLink()+ 'taskpage.html';
     });
     $("#goods-page-from-user").click(function () {
-        window.location.href = $(location).attr('href').slice(0, -10)+ 'goods.html';
+        window.location.href = getStartLink()+ 'goods.html';
     });
     $("#goods-page").click(function () {
-        window.location.href = $(location).attr('href').slice(0, -13)+ 'goods.html';
+        window.location.href = getStartLink()+ 'goods.html';
     });
     var newUser = 0;
     $("#user-page").click(function () {
-        window.location.href = $(location).attr('href').slice(0, -10)+ 'users.html';
+        window.location.href = getStartLink()+ 'users.html';
     });
 
      var sid = $.cookie('sid');
@@ -222,7 +235,19 @@ $(document).ready(function () {
 });
 
 //get task
-
+function getStartLink(){
+    console.log($(location).attr('href'));
+    var link = $(location).attr('href');
+    var linkArr = link.split("//");
+    var linkArr2 = linkArr[1].split("/");
+    var length = linkArr2.length;
+    var startLink = "http://";
+    for(var i=0; i<(length-1); i++){
+        startLink = startLink + linkArr2[i]+"/";
+    }
+    console.log(startLink);
+    return startLink;
+}
 
 function getResp1(data, url) {
     var myVariable;
@@ -259,14 +284,14 @@ function getResp1(data, url) {
     if (myVariable.result === true && myVariable) { //if valid session
         return myVariable;
     }
-    // else {
-    //     if (myVariable.result === false && (myVariable.msg).indexOf('invalid session') == -1) {
-    //         return myVariable;
-    //     } else if (!((window.location.href).indexOf('index') != -1)) {
-    //         window.location.href = $(location).attr('href').slice(0, -13);
-    //         return false;
-    //     }
-    // }
+    else {
+        if (myVariable.result === false && (myVariable.msg).indexOf('invalid session') == -1) {
+            return myVariable;
+        } else  {
+            window.location.href = getStartLink();
+            return false;
+        }
+    }
 
 
 }

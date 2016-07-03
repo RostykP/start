@@ -232,7 +232,18 @@
             }
 
         });
-        return myVariable;
+        if (myVariable.result === true && myVariable) { //if valid session
+            return myVariable;
+        }
+        else {
+            if (myVariable.result === false && (myVariable.msg).indexOf('invalid session') == -1) {
+                return myVariable;
+            } else  {
+                window.location.href = getStartLink1();
+                return false;
+            }
+        }
+        // return myVariable;
         // if (myVariable.result === true && myVariable) { //if valid session
         //     return myVariable;
         // } else {
@@ -247,7 +258,20 @@
 
     }
 
-
+    function getStartLink1(){
+        console.log($(location).attr('href'));
+        var link = $(location).attr('href');
+        var linkArr = link.split("//");
+        var linkArr2 = linkArr[1].split("/");
+        var length = linkArr2.length;
+        var startLink = "http://";
+        for(var i=0; i<(length-1); i++){
+            startLink = startLink + linkArr2[i]+"/";
+        }
+        console.log(startLink);
+        return startLink;
+    }
+    
     function getTasks(data) {
         var tasks = getResp(data, 'task/list/');
         if (tasks) {
