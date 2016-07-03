@@ -593,18 +593,20 @@
             pages = Math.ceil(count / show_on_page),
             list = '';
 
-        if(pages > 1){
-            _tr.show();
-            _table.find('tbody tr:gt(' + (show_on_page - 1) + ')').hide();
+        _tr.show();
+        _table.find('tbody tr:gt(' + (show_on_page - 1) + ')').hide();
 
-            for (var i = 1; i <= pages; i++) {
-                if(i == 1){
-                    list += '<li class="current"><a href="#">'+i+'</a></li>';
-                }else  list += '<li><a href="#">'+i+'</a></li>';
-            }
-            pagination.attr('per-page',show_on_page);
-            pagination.html(list);
+        for (var i = 1; i <= pages; i++) {
+            if(i == 1){
+                list += '<li class="current"><a href="#">'+i+'</a></li>';
+            }else  list += '<li><a href="#">'+i+'</a></li>';
         }
+        pagination.attr('per-page',show_on_page);
+
+        if(pages > 1){
+            pagination.html(list);
+
+        }else  pagination.html('');
 
 
     });
