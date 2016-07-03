@@ -91,7 +91,8 @@
 
                 $.each(array_category, function (key, value) {
                     var position = list.indexOf('data-id="' + value.id + '"'),
-                        output = [list.slice(0, position), selected, list.slice(position)].join('');
+                        output = [list.slice(0, position), selected, list.slice(position)].join(''),
+                        status = value.state == 1 ? 'checked' : '';
 
                     table += '<tr data-cat-id="' + value.id + '">' +
                         '<td>' + (key + 1) + '</td>' + // №
@@ -100,7 +101,7 @@
                         '<td><input data-current="' + value.country + '" name="country" type="text" value="' + value.country + '" disabled></td>' + // Country
                         '<td class="js-code"><input type="text" onfocus="this.blur()" onkeydown="return false;"   value="JS code" disabled></td>' + // JS code
                         '<td><input data-current="' + value.amount + '" type="number" min="1" name="amount" value="' + value.amount + '" disabled></td>' + // Amount
-                        '<td class="status"><div class="switch"><input data-current="' + value.id + '" disabled class="switch-input" id="status-' + value.id + '" type="checkbox" checked="" name="status"><label class="switch-paddle" for="status-' + value.id + '"></label></div></td>' + // Status
+                        '<td class="status"><div class="switch"><input data-current="' + value.state + '" disabled class="switch-input" id="status-' + value.id + '" type="checkbox" ' + status + ' name="status"><label class="switch-paddle" for="status-' + value.id + '"></label></div></td>' + // Status
                         '<td><div class="columns small-6 text-center"><button type="button" class="button small edit">Edit</button></div><div class="columns small-6 text-center"><button type="button" class="button alert small delete">Delete</button></div>' +
                         '<div class="columns small-6 text-center"><button type="button" class="button small success  save hidden">Save</button></div><div class="columns small-6 text-center"><button type="button" class="button alert small cancel hidden">Cancel</button></div></td>' + // Actions
                         '</tr>';
@@ -308,9 +309,21 @@
 
     //call js code modal box
     $doc.on('click', '.js-code input:not(:disabled)', function (e) {
-        $.MessageBox({
-            width:"70%",
-            message:'<div class="js-open"><textarea name="js" rows="4"></textarea></div>'
+        popupS.modal({
+            mode: 'modal',
+            title: 'Title',
+            content: '<div><textarea id="editor" name="js" rows="5"></textarea> </div>',
+            className: 'additionalClass',  // for additional styling, gets append on every popup div
+            placeholder: 'Input Text',     // only available for mode: 'prompt'
+            flagCloseByEsc: false,
+            onOpen: function () {
+
+
+            },      // gets called when popup is opened
+            onSubmit: function (val) {
+            }, // gets called when submitted. val as an paramater for prompts
+            onClose: function () {
+            }      // gets called when popup is closed
         });
     });
 
@@ -336,8 +349,10 @@
                 _select = _this.find('select');
 
             if (_input.length > 0 && _input.attr('data-current')) {
-                if (_input.val() != _input.attr('data-current')) {
+                if (_input.val() != _input.attr('data-current') && _input.attr('type') != "checkbox") {
                     _input.val(_input.attr('data-current'))
+                } else if (!(_input.is(':checked')) && _input.attr('data-current') == "1") { // set default status of input switch
+                    _input.click();
                 }
             } else {
                 if (_select.attr('data-id') != _select.attr('data-current')) {
@@ -348,11 +363,14 @@
             }
         });
 
-
-        _table.removeClass('were-edit');
-        _table.find('input, select').prop('disabled', 'true').attr("disabled");
-        _table.find('button.save,button.cancel').addClass('hidden');
-        _table.find('button.edit,button.delete').removeClass('hidden');
+        // if (_table.hasClass('new')) {
+        //     popupS.alert({
+        //         content: 'Please, save your category before cancel'
+        //     });
+        // } else {
+        //
+        // }
+        onSaveCancel(_table);
     });
 
     //delete button
@@ -363,14 +381,21 @@
             content: 'Do you want to delete a current category?',
             onSubmit: function () {
                 _table.remove();
-                //remove categort getResp();
+                //remove category
+                var del = getResp({
+                    'sid': $.cookie('sid'),
+                    'id': parseInt(_table.attr('data-cat-id'))
+                }, 'offer/delete/');
+
             }
         });
     });
 
     //save button
     $doc.on('click', '#goods .save', function (e) {
-        var _table = $(this).parents('tr');
+        var _table = $(this).parents('tr'),
+            _td = _table.find('td'),
+            action = 1;
 
 
         var data = {};
@@ -405,11 +430,49 @@
             var url = 'offer/update/';
             if ($(this).hasClass('create-new')) {
                 url = 'offer/create/';
+                action = 0;
                 delete data.id; //remove id if new one
             }
+            console.log(data);
 
             var result = getResp(data, url);
-            console.log(data);
+            if (result.result === true && action == 1) { //if update successful
+                popupS.alert({
+                    content: 'Category was successfully updated!'
+                });
+                onSaveCancel(_table);
+            } else if (result.result === true && action == 0) { //if create new
+                popupS.alert({
+                    content: 'Category created successfully!'
+                });
+                _table.removeClass('new'); //remove new Classname if there was a new category
+                var current_id = MaxId(_table.parents('#goods')); //get the id of new category
+                $.each(_td, function (key, value) {
+                    //if input
+                    var _input = $(this).find('input'),
+                        _select = $(this).find('select');
+
+                    if (_input.length > 0) {
+                        if (_input.attr('type') != 'checkbox') {
+                            _input.attr('data-current', _input.val());
+                        } else {
+                            var status = _input.is(':checked') ? 1 : 0;
+                            _input.attr('data-current', status);
+                        }
+                    }
+                });
+                //update data-current tags
+                _table.attr('data-cat-id', current_id);
+
+                onSaveCancel(_table);
+            } else if (result.result === false) {
+                popupS.alert({
+                    content: result.msg
+                });
+
+            }
+
+
         }
 
     });
@@ -418,21 +481,28 @@
     $doc.on('click', '#wrapper .add-good', function (e) {
         var table = $('#goods'),
             category_list = table.find('tr:first-child td:nth-child(2) select').html(),
-            last_id = parseInt(table.find('tr:last-child td:first-child').text()) + 1;
+            last_id = parseInt(table.find('tr:last-child td:first-child').text()) + 1,
+            is_new = table.find('tr.new');
 
+        //if there no any news <tr>
+        if (is_new.length == 0) {
 
-        table.append('<tr>' +
-            '<td>' + last_id + '</td>' +
-            '<td><select>' + category_list + '</select></td>' +
-            '<td><input name="link" value="" type="text" ></td>' +
-            '<td><input name="country" type="text" value="" ></td>' +
-            '<td class="js-code"><input type="text" onfocus="this.blur()" onkeydown="return false;" value="JS code" ></td>' +
-            '<td><input type="number" min="1" name="amount" value="1" ></td>' +
-            '<td class="status"><div class="switch"><input class="switch-input" id="status-' + last_id + '" type="checkbox" checked="" name="status"><label class="switch-paddle" for="status-' + last_id + '"></label></div></td>' +
-            '<td><div class="columns small-6 text-center"><button type="button" class="button small edit hidden">Edit</button></div><div class="columns small-6 text-center"><button type="button" class="button alert small delete hidden">Delete</button></div><div class="columns small-6 text-center"><button type="button" class="button small success save create-new">Save</button></div><div class="columns small-6 text-center"><button type="button" class="button alert small cancel">Cancel</button></div></td>' +
-            '</tr>');
+            table.append('<tr class="new">' +
+                '<td>' + last_id + '</td>' +
+                '<td><select>' + category_list + '</select></td>' +
+                '<td><input name="link" value="" type="text" ></td>' +
+                '<td><input name="country" type="text" value="" ></td>' +
+                '<td class="js-code"><input type="text" onfocus="this.blur()" onkeydown="return false;" value="JS code" ></td>' +
+                '<td><input type="number" min="1" name="amount" value="1" ></td>' +
+                '<td class="status"><div class="switch"><input class="switch-input" id="status-' + last_id + '" type="checkbox" checked="" name="status"><label class="switch-paddle" for="status-' + last_id + '"></label></div></td>' +
+                '<td><div class="columns small-6 text-center"><button type="button" class="button small edit hidden">Edit</button></div><div class="columns small-6 text-center"><button type="button" class="button alert small delete hidden">Delete</button></div><div class="columns small-6 text-center"><button type="button" class="button small success save create-new">Save</button></div><div class="columns small-6 text-center"><button type="button" class="button alert small cancel">Cancel</button></div></td>' +
+                '</tr>');
 
-        callSelect(table); //reinitialize select2
+            callSelect(table); //reinitialize select2
+        } else {
+            is_new.find('input[name=link]').focus();
+        }
+
     });
 
     $doc.on('keydown', '#goods input[name=amount]', function (e) {
@@ -480,16 +550,38 @@
 
     }
 
+    //show/hide buttons and remove edit class of <tr>
+    function onSaveCancel(el) {
+        el.removeClass('were-edit');
+        el.find('input, select').prop('disabled', 'true').attr("disabled");
+        el.find('button.save,button.cancel').addClass('hidden');
+        el.find('button.edit,button.delete').removeClass('hidden');
+    }
+
+    //get the highest id of category
+    function MaxId(selector) {
+        var max = null,
+            _tr = selector.find('tbody tr');
+
+        $.each(_tr, function (key, value) {
+            var id = parseInt($(this).attr('data-cat-id'));
+            if ((max === null) || (id > max)) {
+                max = id;
+            }
+        });
+        return {max: max};
+    }
+
 
     //check if there are no changes not saving
-    $(window).on('beforeunload', function () {
-        // var table = $('#goods'),
-        //     table_tr = table.find('tbody tr');
-        //  if(table.length>0){
-        //      $.each(table_tr,function (key,value) {
-        //
-        //      })
-        //  }
+    $(window).on('beforeunload', function (e) {
+        var table = $('#goods');
+
+        if(table.find('tr.were-edit').length > 0 || table.find('tr.new').length > 0){
+
+           return 'Do you really want to close window tab?';
+        }
+
     });
 
 }(jQuery, window, document));
