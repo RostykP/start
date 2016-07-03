@@ -16,7 +16,8 @@
     <div class="row">
         <div class="clearfix"></div>
         <div>
-            <button class="add-good button small">Add</button>
+            <button class="add-good button small float-left">Add</button>
+
         </div>
         <table id="goods">
             <thead>
@@ -42,7 +43,6 @@
 
 <script type="text/javascript" src="js/jquery.min.js"></script>
 <script>
-    console.log(document.referrer);
     if((document.referrer.indexOf('taskpage') === -1) && (document.referrer.indexOf('users') === -1)){
         var link = $(location).attr('href');
         var linkArr = link.split("//");
@@ -57,6 +57,7 @@
     }
 </script>
 <script type="text/javascript" src="js/main.min.js"></script>
+<script type="text/javascript" src="js/andrij.js"></script>
 
 
 
