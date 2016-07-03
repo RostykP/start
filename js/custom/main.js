@@ -24,7 +24,7 @@
         $("#goods-page").click(function () {
             window.location.href = getStartLink() + 'goods.html';
         });
-        var newUser = 0;
+        
         $("#user-page").click(function () {
             window.location.href = getStartLink() + 'users.html';
         });

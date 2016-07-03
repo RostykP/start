@@ -16,7 +16,7 @@ $(document).ready(function () {
     //     console.log(newLink);
     //
     // });
-   
+    var newUser = 0;
      var sid = $.cookie('sid');
      var users = getResp1({"sid": sid}, "user/list/");
     console.log(users);
@@ -28,16 +28,16 @@ $(document).ready(function () {
                 $("#all-user-table").append("<tr id='"+users.list[i].id+"'><td>"+count+"</td><td class='table-row'><input class ='login-row' id='"+users.list[i].login+"_deflog' type='text' value='"+users.list[i].login+"'></td>"+
                     "<td class='table-row'><input class='pass-row' placeholder='Enter password' type='password' value='11111111'></td><td class='table-row'>"+
                     "<input id='"+state+"_defstate' class = 'switch' type='checkbox' checked></td>"+
-                    "<td><div class='edit-buttons'><input id='edit-user' type='button' value='Edit'><input id='delete-user' type='button' value='Delete'></div>"+
-                    "<div hidden class='save-buttons'><input id='save-user' type='button' value='Save'><input id='cancel-save-user' type='button' value='Cancel'></div></td></tr>");
+                    "<td><div class='edit-buttons  '><input class='button small' id='edit-user' type='button' value='Edit'><input class='button small alert' id='delete-user' type='button' value='Delete'></div>"+
+                    "<div hidden class='save-buttons'><input id='save-user' class='button small' type='button' value='Save'><input class='button small alert' id='cancel-save-user' type='button' value='Cancel'></div></td></tr>");
 
             } else {
                 var state = 0;
                 $("#all-user-table").append("<tr id='"+users.list[i].id+"'><td>"+count+"</td><td class='table-row'><input class ='login-row' id='"+users.list[i].login+"_deflog' type='text' value='"+users.list[i].login+"'></td>"+
                     "<td class='table-row'><input class='pass-row' placeholder='Enter password' type='password' value='11111111'></td><td class='table-row'>"+
                     "<input id='"+state+"_defstate' class = 'switch' type='checkbox'></td>"+
-                    "<td><div class='edit-buttons'><input id='edit-user' type='button' value='Edit'><input id='delete-user' type='button' value='Delete'></div>"+
-                    "<div hidden class='save-buttons'><input id='save-user' type='button' value='Save'><input id='cancel-save-user' type='button' value='Cancel'></div></td></tr>");
+                    "<td><div class='edit-buttons'><input id='edit-user' class='button small' type='button' value='Edit'><input class='button small alert' id='delete-user' type='button' value='Delete'></div>"+
+                    "<div hidden class='save-buttons'><input id='save-user' class='button small' type='button' value='Save'><input class='button small alert' id='cancel-save-user' type='button' value='Cancel'></div></td></tr>");
 
             }
             count++;
@@ -54,8 +54,8 @@ $(document).ready(function () {
             $("#all-user-table").append("<tr id='new-user-id'><td>" + lastCount + "</td><td class='table-row'><input class ='login-row'  type='text' value=''></td>" +
                 "<td class='table-row'><input class='pass-row' placeholder='Enter password' type='password' value=''></td><td class='table-row'>" +
                 "<input  class = 'switch' type='checkbox' checked></td>" +
-                "<td><div hidden class='edit-buttons'><input id='edit-user' type='button' value='Edit'><input id='delete-user' type='button' value='Delete'></div>" +
-                "<div  class='save-buttons'><input id='save-user' type='button' value='Save'><input id='cancel-save-user' type='button' value='Cancel'></div></td></tr>");
+                "<td><div hidden class='edit-buttons'><input id='edit-user' class='button small' type='button' value='Edit'><input class='button small alert' id='delete-user' type='button' value='Delete'></div>" +
+                "<div  class='save-buttons'><input id='save-user' class='button small' type='button' value='Save'><input class='button small alert' id='cancel-save-user' type='button' value='Cancel'></div></td></tr>");
             $('.switch').lc_switch();
         } else {
             $.MessageBox("Please finish last adding user!!!");
