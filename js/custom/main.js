@@ -328,7 +328,7 @@
         console.log(idForDelete);
         $('#show-product-info').removeClass('hidden');
         $('a#status').attr('data-status', a.state);
-        $('#prod-info').html('<b>Date:</b>' + moment(a.ts * 1000).format() + '; ' + '<b>Task: #</b>' + a.id + '; ' + '<b>Offer:</b> -' + a.country + ' - ' + a.offerName + '; ' + '<b>Af id:</b>' + a.aid);
+        $('#prod-info').html('<b>Date:</b>' + moment(a.ts * 1000).format('YYYY-MM-DD HH:mm:ss') + '; ' + '<b>Task: #</b>' + a.id + '; ' + '<b>Offer:</b>' + a.country + ' - ' + a.offerName + '; ' + '<b>Af id:</b>' + a.aid);
         $('#product-data-d').html(decodeURIComponent(escape(window.atob(a.data))));
         $(".screenshot-list").html("");
         $.each(a.images, function (i) {
