@@ -501,7 +501,9 @@
                     content: 'Category created successfully!'
                 });
                 _table.removeClass('new'); //remove new Classname if there was a new category
+
                 var current_id = MaxId(_table.parents('#goods')); //get the id of new category
+                console.log(current_id)
                 $.each(_td, function (key, value) {
                     //if input
                     var _input = $(this).find('input'),
@@ -517,7 +519,7 @@
                     }
                 });
                 //update data-current tags
-                _table.attr('data-cat-id', current_id);
+                _table.attr('data-cat-id', parseInt(current_id.max)+1);
 
                 onSaveCancel(_table);
             } else if (result.result === false) {
