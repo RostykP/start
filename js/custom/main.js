@@ -497,7 +497,7 @@
 
 
             var result = getResp(data, url);
-
+            console.log(result);
             if (result.result === true && action == 1) { //if update successful
                 popupS.alert({
                     content: 'Category was successfully updated!'
@@ -509,7 +509,7 @@
                 });
                 _table.removeClass('new'); //remove new Classname if there was a new category
 
-                var current_id = MaxId(_table.parents('#goods')); //get the id of new category
+                var current_id =  result.id;
 
                 $.each(_td, function (key, value) {
                     //if input
@@ -529,7 +529,7 @@
                     }
                 });
                 //update data-current tags
-                _table.attr('data-cat-id', parseInt(current_id.max)+1);
+                _table.attr('data-cat-id', parseInt(current_id));
 
                 onSaveCancel(_table);
             } else if (result.result === false) {
