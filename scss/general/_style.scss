@@ -65,8 +65,7 @@
 
     }
     .task-list-class{
-        padding: 2px;
-        margin: 10px 0;
+        margin: 9px 0;
         color: blue;
         span{
             &:first-child{
@@ -74,7 +73,8 @@
             }
         }
         &.active{
-            color: red;
+            background: #2ba6cb;
+            color: #fefefe;
         }
         &:hover{
             cursor: pointer;
@@ -90,7 +90,7 @@
 }
 #prod-info{
     font-weight: bold;
-    line-height: 40px;
+    line-height: 30px;
 }
 .hidden{
     display: none;
@@ -99,7 +99,8 @@
     clear: both;
 }
 #status{
-    padding: .57em 0.66em;
+    margin:0;
+    padding: .4em 0.44em;
     font-weight: bold;
     &.button[data-status="1"]{
         background: #d6d65c;
@@ -119,7 +120,7 @@
     max-width: 50px;
 }
 #delete_task_id{
-    padding: .57em 0.66em;
+    padding: .5em 0.56em;
 }
 
 table{
@@ -220,4 +221,14 @@ table thead tr th, table thead tr td {
     .popupS-title.additionalClass{
         text-align: center;
     }
+}
+
+#wrapper .columns {
+    padding-left: .6rem;
+}
+#wrapper #div-for-input-search, #wrapper #div-for-status-button, #wrapper #div-for-button-search{
+    padding-left: 0rem;
+}
+#wrapper .filter .end, #goods-page, #quick-search{
+    float: right;
 }
