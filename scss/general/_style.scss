@@ -207,3 +207,17 @@ table thead tr th, table thead tr td {
 .goods .row .row{
     margin: 0;
 }
+.textarea-pop+div{
+    width: 100% !important;
+    .popupS-content.additionalClass{
+        width: 100%;
+        max-width: 100%;
+        text-align: left;
+        .popupS-buttons{
+            text-align: center;
+        }
+    }
+    .popupS-title.additionalClass{
+        text-align: center;
+    }
+}

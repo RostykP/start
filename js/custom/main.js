@@ -115,7 +115,7 @@
                         '<td><select disabled data-current = "' + value.id + '">' + output + '</select></td>' + // Category
                         '<td><input data-current="' + value.url + '" name="link" value="' + value.url + '" type="text" disabled> </td>' + // URL
                         '<td><input data-current="' + value.country + '" name="country" type="text" value="' + value.country + '" disabled></td>' + // Country
-                        '<td class="js-code"><input type="text" onfocus="this.blur()" onkeydown="return false;"   value="JS code" disabled><textarea class="hidden">'+value.js+'</textarea></td>' + // JS code
+                        '<td class="js-code"><input type="text" onfocus="this.blur()" onkeydown="return false;"   value="JS code" disabled><textarea class="hidden">'+value.js+'</textarea><textarea class="hidden default">'+value.js+'</textarea></td>' + // JS code
                         '<td><input data-current="' + value.amount + '" type="number" min="1" name="amount" value="' + value.amount + '" disabled></td>' + // Amount
                         '<td class="status"><div class="switch"><input data-current="' + value.state + '" disabled class="switch-input" id="status-' + value.id + '" type="checkbox" ' + status + ' name="status"><label class="switch-paddle" for="status-' + value.id + '"></label></div></td>' + // Status
                         '<td><div class="columns small-6 text-center"><button type="button" class="button small edit">Edit</button></div><div class="columns small-6 text-center"><button type="button" class="button alert small delete">Delete</button></div>' +
@@ -355,12 +355,13 @@
 
     //call js code modal box
     $doc.on('click', '.js-code input:not(:disabled)', function (e) {
-		var textarea = $(this).parent().find("textarea");
+		var textarea = $(this).parent().find("textarea:not(.default)");
 		var editor;
         popupS.confirm({
             mode: 'modal',
             title: 'Detail JS',
-            content: '<div><textarea id="editor" name="js" width="400px">'+$(textarea).html()+'</textarea> </div>',
+            content: '<div><textarea id="editor" name="js" width="90%">'+$(textarea).html()+'</textarea> </div>',
+            additionalOverlayClass:'textarea-pop',
             className: 'additionalClass',  // for additional styling, gets append on every popup div
             placeholder: 'Input Text',     // only available for mode: 'prompt'
             flagCloseByEsc: false,
@@ -401,7 +402,8 @@
         $.each(_td, function (key, value) {
             var _this = $(this),
                 _input = _this.find('input'),
-                _select = _this.find('select');
+                _select = _this.find('select'),
+                _textarea = _this.find('textarea:not(.default)');
 
             if (_input.length > 0 && _input.attr('data-current')) {
                 if (_input.val() != _input.attr('data-current') && _input.attr('type') != "checkbox") {
@@ -409,11 +411,15 @@
                 } else if ((!(_input.is(':checked')) && _input.attr('data-current') == "1") || ((_input.is(':checked')) && _input.attr('data-current') == "0")) { // set default status of input switch
                     _input.click();
                 }
-            } else {
+            } else if(_select.length > 0){
                 if (_select.attr('data-id') != _select.attr('data-current')) {
                     _select.find('option[data-id=' + _select.attr('data-current') + ']').attr("selected", "selected");
                     var sel = _select.find('option[data-id=' + _select.attr('data-current') + ']').text();
                     _select.next().find('.select2-selection__rendered').html(sel)
+                }
+            }else{
+                if(_textarea.html() != _textarea.next().html()){
+                    _textarea.html(_textarea.next().html());
                 }
             }
         });
@@ -469,8 +475,8 @@
             _table.find('input[name=link]').removeClass('error');
         } else _table.find('input[name=link]').addClass('error');
 
-        data.js = "";
-        data.js = _table.find('textarea').html();
+
+        data.js = _table.find('textarea:not(.default)').html();
         data.state = (_table.find('input.switch-input').is(':checked')) ? 1 : 0;
 
         if (_table.find('input[name=amount]').val() > 0) {
@@ -488,9 +494,10 @@
                 action = 0;
                 delete data.id; //remove id if new one
             }
-            console.log(data);
+
 
             var result = getResp(data, url);
+
             if (result.result === true && action == 1) { //if update successful
                 popupS.alert({
                     content: 'Category was successfully updated!'
@@ -503,16 +510,19 @@
                 _table.removeClass('new'); //remove new Classname if there was a new category
 
                 var current_id = MaxId(_table.parents('#goods')); //get the id of new category
-                console.log(current_id)
+
                 $.each(_td, function (key, value) {
                     //if input
                     var _input = $(this).find('input'),
-                        _select = $(this).find('select');
+                        _select = $(this).find('select'),
+                        _textarea = $(this).find('textarea:not(.default)');
 
                     if (_input.length > 0) {
-                        if (_input.attr('type') != 'checkbox') {
+                        if (_input.attr('type') != 'checkbox' && _input.next('textarea').length==0) {
                             _input.attr('data-current', _input.val());
-                        } else {
+                        }else if(_textarea.length > 0){
+                            _textarea.next().html(_textarea.html());
+                        }else {
                             var status = _input.is(':checked') ? 1 : 0;
                             _input.attr('data-current', status);
                         }
@@ -549,7 +559,7 @@
                 '<td><select>' + category_list + '</select></td>' +
                 '<td><input name="link" value="" type="text" ></td>' +
                 '<td><input name="country" type="text" value="" ></td>' +
-                '<td class="js-code"><input type="text" onfocus="this.blur()" onkeydown="return false;" value="JS code" ><textarea class="hidden"></textarea></td></td>' +
+                '<td class="js-code"><input type="text" onfocus="this.blur()" onkeydown="return false;" value="JS code" ><textarea class="hidden"></textarea><textarea class="hidden default"></textarea></td></td>' +
                 '<td><input type="number" min="1" name="amount" value="1" ></td>' +
                 '<td class="status"><div class="switch"><input class="switch-input" id="status-' + last_id + '" type="checkbox" checked="" name="status"><label class="switch-paddle" for="status-' + last_id + '"></label></div></td>' +
                 '<td><div class="columns small-6 text-center"><button type="button" class="button small edit hidden">Edit</button></div><div class="columns small-6 text-center"><button type="button" class="button alert small delete hidden">Delete</button></div><div class="columns small-6 text-center"><button type="button" class="button small success save create-new">Save</button></div><div class="columns small-6 text-center"><button type="button" class="button alert small cancel">Cancel</button></div></td>' +
