@@ -75,6 +75,8 @@
         &.active{
             background: #2ba6cb;
             color: #fefefe;
+            border-radius: 15px;
+            padding: 5px 0;
         }
         &:hover{
             cursor: pointer;
@@ -232,3 +234,26 @@ table thead tr th, table thead tr td {
 #wrapper .filter .end, #goods-page, #quick-search{
     float: right;
 }
+#div-for-status-button{
+    max-width: 27px;
+}
+#prod-info{
+    font-size: 15px;
+}
+#task_list{
+    padding-right: 20px;
+}
+@media screen and (min-width: 40em){
+    .pr-30{
+        width: 31% !important;
+    }
+    .pr-70{
+        width: 69% !important;;
+    }
+    #div-for-input-search{
+        input{
+            max-width: 255px;
+        }
+    }
+}
+
