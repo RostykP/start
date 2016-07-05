@@ -30,7 +30,7 @@
         });
 
 
-        $('#current-date').html(moment().format("YYYY-MM-D"));
+        $('#current-date').html(moment().format("YYYY/MM/D")+" - "+moment().format("YYYY/MM/D"));
         $('#submit').click(function (e) {
 
 
