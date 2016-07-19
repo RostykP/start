@@ -422,10 +422,12 @@
             onSubmit: function () {
                 _table.remove();
                 //remove category
-                var del = getResp({
+                getResp2({
                     'sid': $.cookie('sid'),
                     'id': parseInt(_table.attr('data-cat-id'))
-                }, 'offer/delete/');
+                }, 'offer/delete/', function(response){
+
+                });
 
             }
         });
@@ -474,49 +476,51 @@
                 delete data.id; //remove id if new one
             }
 
+            getResp2(data, url, function(response){
+                var result = response;
 
-            var result = getResp(data, url);
-            console.log(result);
-            if (result.result === true && action == 1) { //if update successful
-                popupS.alert({
-                    content: 'Category was successfully updated!'
-                });
-                onSaveCancel(_table);
-            } else if (result.result === true && action == 0) { //if create new
-                popupS.alert({
-                    content: 'Category created successfully!'
-                });
-                _table.removeClass('new'); //remove new Classname if there was a new category
+                if (result.result === true && action == 1) { //if update successful
+                    popupS.alert({
+                        content: 'Category was successfully updated!'
+                    });
+                    onSaveCancel(_table);
+                } else if (result.result === true && action == 0) { //if create new
+                    popupS.alert({
+                        content: 'Category created successfully!'
+                    });
+                    _table.removeClass('new'); //remove new Classname if there was a new category
 
-                var current_id =  result.id;
+                    var current_id =  result.id;
 
-                $.each(_td, function (key, value) {
-                    //if input
-                    var _input = $(this).find('input'),
-                        _select = $(this).find('select'),
-                        _textarea = $(this).find('textarea:not(.default)');
+                    $.each(_td, function (key, value) {
+                        //if input
+                        var _input = $(this).find('input'),
+                            _select = $(this).find('select'),
+                            _textarea = $(this).find('textarea:not(.default)');
 
-                    if (_input.length > 0) {
-                        if (_input.attr('type') != 'checkbox' && _input.next('textarea').length==0) {
-                            _input.attr('data-current', _input.val());
-                        }else if(_textarea.length > 0){
-                            _textarea.next().html(_textarea.html());
-                        }else {
-                            var status = _input.is(':checked') ? 1 : 0;
-                            _input.attr('data-current', status);
+                        if (_input.length > 0) {
+                            if (_input.attr('type') != 'checkbox' && _input.next('textarea').length==0) {
+                                _input.attr('data-current', _input.val());
+                            }else if(_textarea.length > 0){
+                                _textarea.next().html(_textarea.html());
+                            }else {
+                                var status = _input.is(':checked') ? 1 : 0;
+                                _input.attr('data-current', status);
+                            }
                         }
-                    }
-                });
-                //update data-current tags
-                _table.attr('data-cat-id', parseInt(current_id));
+                    });
+                    //update data-current tags
+                    _table.attr('data-cat-id', parseInt(current_id));
 
-                onSaveCancel(_table);
-            } else if (result.result === false) {
-                popupS.alert({
-                    content: result.msg
-                });
+                    onSaveCancel(_table);
+                } else if (result.result === false) {
+                    popupS.alert({
+                        content: result.msg
+                    });
 
-            }
+                }
+            });
+
 
 
         }
