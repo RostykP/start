@@ -38,16 +38,20 @@
             var login = $('input[name="login"]').val(),
                 pass = $('input[name="pass"]').val();
 
-            var sid = getResp({"login": login, "pass": pass}, 'auth/');
-            if (sid.result === true) {
-                // $.removeCookie('sid')
-                $.cookie('sid', sid.sid);
-                // console.log($(location));
-                // console.log($(location).attr('href'));
-                window.location.href = getStartLink() + 'taskpage.html';
-            } else {
-                $.MessageBox(sid.msg);
-            }
+            getResp2({"login": login, "pass": pass},  'auth/', function(response){
+                var sid = response;
+                if (sid.result === true) {
+                    // $.removeCookie('sid')
+                    $.cookie('sid', sid.sid);
+                    // console.log($(location));
+                    // console.log($(location).attr('href'));
+                    window.location.href = getStartLink() + 'taskpage.html';
+                } else {
+                    $.MessageBox(sid.msg);
+                }
+            });
+
+
         });
 
 
@@ -195,15 +199,18 @@
             }).done(function () {
                 var sid = $.cookie('sid');
                 var id = parseInt(idForDelete);
-                console.log(sid + " " + id);
-                var deleted = getResp({"sid": sid, "id": id}, 'task/delete/');
-                // // console.log(deleted);
-                if (deleted.result === true) {
-                    $.MessageBox("Task was deleted!!!");
-                    $("#task_list").find("#" + id).hide();
-                } else {
-                    $.MessageBox("Task was not deleted!!!");
-                }
+
+                getResp2({"sid": sid, "id": id}, 'task/delete/', function(response){
+                    var deleted = response;
+                    // // console.log(deleted);
+                    if (deleted.result === true) {
+                        $.MessageBox("Task was deleted!!!");
+                        $("#task_list").find("#" + id).hide();
+                    } else {
+                        $.MessageBox("Task was not deleted!!!");
+                    }
+                })  ;
+
             }).fail(function () {
 
             });
@@ -278,25 +285,28 @@
     }
 
     function getTasks(data) {
-        var tasks = getResp(data, 'task/list/');
-        if (tasks) {
-            var res = '';
-            $.each(tasks.list, function (i) {
-                // $.MessageBox( a.list[i].id );
-                var date = new Date(tasks.list[i].ts * 1000);
-                var month = (1 + date.getMonth()).toString();
-                month = month.length > 1 ? month : '0' + month;
-                var day = date.getDate().toString();
-                day = day.length > 1 ? day : '0' + day;
-                var sec = date.getSeconds().toString();
-                sec = sec.length > 1 ? sec : '0' + sec;
-                var newDate = date.getFullYear() + "-" + month + "-" + day + "<br> " + date.getHours() + ":" + date.getMinutes() + ":" + sec;
-                res += "<li class='task-list-class' id='" + tasks.list[i].id + "' ><span>" + tasks.list[i].id + " -</span><span>" + newDate + "</span></li>";
+        getResp2(data, 'task/list/', function(response){
+            var tasks = response;
+            if (tasks) {
+                var res = '';
+                $.each(tasks.list, function (i) {
+                    // $.MessageBox( a.list[i].id );
+                    var date = new Date(tasks.list[i].ts * 1000);
+                    var month = (1 + date.getMonth()).toString();
+                    month = month.length > 1 ? month : '0' + month;
+                    var day = date.getDate().toString();
+                    day = day.length > 1 ? day : '0' + day;
+                    var sec = date.getSeconds().toString();
+                    sec = sec.length > 1 ? sec : '0' + sec;
+                    var newDate = date.getFullYear() + "-" + month + "-" + day + "<br> " + date.getHours() + ":" + date.getMinutes() + ":" + sec;
+                    res += "<li class='task-list-class' id='" + tasks.list[i].id + "' ><span>" + tasks.list[i].id + " -</span><span>" + newDate + "</span></li>";
 
-            });
-            $("#task_list ul").html(res);
-            $(".task-list-class:first").click().addClass('active');
-        }
+                });
+                $("#task_list ul").html(res);
+                $(".task-list-class:first").click().addClass('active');
+            }
+        });
+
     }
 
 
@@ -307,20 +317,25 @@
         var sid = $.cookie('sid');
         var id = this.id;
 
-        var a = getResp({"sid": $.cookie('sid'), "id": parseInt(id)}, 'task/get/');
-        console.log(a);
-        idForDelete = id;
-        console.log(idForDelete);
-        $('#show-product-info').removeClass('hidden');
-        $('a#status').attr('data-status', a.state);
-        $('#prod-info').html('<b>Date:</b>' + moment(a.ts * 1000).format('YYYY-MM-DD HH:mm:ss') + '; ' + '<b>Task: #</b>' + a.id + '; ' + '<b>Offer:</b>' + a.country + ' - ' + a.offerName + '; ' + '<b>Af id:</b>' + a.aid);
-        $('#product-data-d').html(decodeURIComponent(escape(window.atob(a.data))));
-        $(".screenshot-list").html("");
-        $.each(a.images, function (i) {
-            $(".screenshot-list").append('<li><a class="fancybox" rel="group" href="data:image/png;base64,' + a.images[i].data + '"> <img width="128" height="128" src="data:image/png;base64,' + a.images[i].data + '" alt=""/></a></li>');
+
+
+        getResp2({"sid": $.cookie('sid'), "id": parseInt(id)}, 'task/get/', function(response){
+            var a = response;
+            idForDelete = id;
+            console.log(idForDelete);
+            $('#show-product-info').removeClass('hidden');
+            $('a#status').attr('data-status', a.state);
+            $('#prod-info').html('<b>Date:</b>' + moment(a.ts * 1000).format('YYYY-MM-DD HH:mm:ss') + '; ' + '<b>Task: #</b>' + a.id + '; ' + '<b>Offer:</b>' + a.country + ' - ' + a.offerName + '; ' + '<b>Af id:</b>' + a.aid);
+            $('#product-data-d').html(decodeURIComponent(escape(window.atob(a.data))));
+            $(".screenshot-list").html("");
+            $.each(a.images, function (i) {
+                $(".screenshot-list").append('<li><a class="fancybox" rel="group" href="data:image/png;base64,' + a.images[i].data + '"> <img width="128" height="128" src="data:image/png;base64,' + a.images[i].data + '" alt=""/></a></li>');
+            });
+
+            $(this).addClass('active');
         });
 
-        $(this).addClass('active');
+
 
     });
 
@@ -714,7 +729,18 @@
             data: JSON.stringify(data),
             url: "http://" + $.cookie('domain') + "/sys/" + url,
             success: function (data) {
-                callback(data);
+                if (data.result === true && data) { //if valid session
+                    callback(data);
+                }
+                else {
+                    if (data.result === false && (data.msg).indexOf('invalid session') == -1) {
+                        callback(data);
+                    } else  {
+                        $.removeCookie('sid');
+                        window.location.href = getStartLink();
+                        return false;
+                    }
+                }
             }
         });
 
