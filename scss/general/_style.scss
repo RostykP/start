@@ -14,7 +14,7 @@
         overflow-y: auto;
         word-break: break-all;
         &::-webkit-scrollbar {
-            width: 8px;
+            width: 6px;
             background-color: #F5F5F5;
         }
         &::-webkit-scrollbar-thumb {
@@ -50,7 +50,7 @@
         position: relative;
         overflow: auto;
         &::-webkit-scrollbar {
-            width: 8px;
+            width: 5px;
             background-color: #F5F5F5;
         }
         &::-webkit-scrollbar-thumb {
@@ -75,7 +75,7 @@
         &.active{
             background: #2ba6cb;
             color: #fefefe;
-            border-radius: 15px;
+            border-radius: 3px;
             padding: 5px 0;
         }
         &:hover{
@@ -207,7 +207,7 @@ table thead tr th, table thead tr td {
         margin: 0;
     }
 }
-.goods .row .row{
+.goods .row .row, #wrapper .row .row{
     margin: 0;
 }
 .textarea-pop+div{
@@ -257,3 +257,10 @@ table thead tr th, table thead tr td {
     }
 }
 
+#wrapper img{
+    height: 128px !important;
+    width: 128px !important;
+}
+#clear-filters{
+    margin-left: 10px;
+}

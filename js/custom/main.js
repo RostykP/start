@@ -370,14 +370,14 @@
             className: 'additionalClass',  // for additional styling, gets append on every popup div
             placeholder: 'Input Text',     // only available for mode: 'prompt'
             flagCloseByEsc: false,
-			flagCloseByOverlay: false, 
+			flagCloseByOverlay: false,
 			labelOk:     'Yes',
 			labelCancel: 'No',
 			onOpen: function () {
 				var myTextarea = document.getElementById("editor");
 				editor = CodeMirror.fromTextArea(myTextarea, {
 					lineNumbers: true,
-					mode:  "javascript"	
+					mode:  "javascript"
 				});
             },      // gets called when popup is opened
             onSubmit: function (val) {
