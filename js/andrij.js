@@ -18,33 +18,35 @@ $(document).ready(function () {
     // });
     var newUser = 0;
      var sid = $.cookie('sid');
-     var users = getResp1({"sid": sid}, "user/list/");
-    console.log(users);
-    if (users) {
-        var count = 1;
-        $.each(users.list, function (i) {
-            if(users.list[i].state == 1){
-                var state = 1;
-                $("#all-user-table").append("<tr id='"+users.list[i].id+"'><td>"+count+"</td><td class='table-row'><input class ='login-row' id='"+users.list[i].login+"_deflog' type='text' value='"+users.list[i].login+"'></td>"+
-                    "<td class='table-row'><input class='pass-row' placeholder='Enter password' type='password' value='11111111'></td><td class='table-row'>"+
-                    "<input id='"+state+"_defstate' class = 'switch' type='checkbox' checked></td>"+
-                    "<td><div class='edit-buttons  '><input class='button small' id='edit-user' type='button' value='Edit'><input class='button small alert' id='delete-user' type='button' value='Delete'></div>"+
-                    "<div hidden class='save-buttons'><input id='save-user' class='button small' type='button' value='Save'><input class='button small alert' id='cancel-save-user' type='button' value='Cancel'></div></td></tr>");
+    getResp2({"sid": sid}, 'user/list/', function(response){
+        var users = response;
+        if (users) {
+            var count = 1;
+            $.each(users.list, function (i) {
+                if(users.list[i].state == 1){
+                    var state = 1;
+                    $("#all-user-table").append("<tr id='"+users.list[i].id+"'><td>"+count+"</td><td class='table-row'><input class ='login-row' id='"+users.list[i].login+"_deflog' type='text' value='"+users.list[i].login+"'></td>"+
+                        "<td class='table-row'><input class='pass-row' placeholder='Enter password' type='password' value='11111111'></td><td class='table-row'>"+
+                        "<input id='"+state+"_defstate' class = 'switch' type='checkbox' checked></td>"+
+                        "<td><div class='edit-buttons  '><input class='button small' id='edit-user' type='button' value='Edit'><input class='button small alert' id='delete-user' type='button' value='Delete'></div>"+
+                        "<div hidden class='save-buttons'><input id='save-user' class='button small' type='button' value='Save'><input class='button small alert' id='cancel-save-user' type='button' value='Cancel'></div></td></tr>");
 
-            } else {
-                var state = 0;
-                $("#all-user-table").append("<tr id='"+users.list[i].id+"'><td>"+count+"</td><td class='table-row'><input class ='login-row' id='"+users.list[i].login+"_deflog' type='text' value='"+users.list[i].login+"'></td>"+
-                    "<td class='table-row'><input class='pass-row' placeholder='Enter password' type='password' value='11111111'></td><td class='table-row'>"+
-                    "<input id='"+state+"_defstate' class = 'switch' type='checkbox'></td>"+
-                    "<td><div class='edit-buttons'><input id='edit-user' class='button small' type='button' value='Edit'><input class='button small alert' id='delete-user' type='button' value='Delete'></div>"+
-                    "<div hidden class='save-buttons'><input id='save-user' class='button small' type='button' value='Save'><input class='button small alert' id='cancel-save-user' type='button' value='Cancel'></div></td></tr>");
+                } else {
+                    var state = 0;
+                    $("#all-user-table").append("<tr id='"+users.list[i].id+"'><td>"+count+"</td><td class='table-row'><input class ='login-row' id='"+users.list[i].login+"_deflog' type='text' value='"+users.list[i].login+"'></td>"+
+                        "<td class='table-row'><input class='pass-row' placeholder='Enter password' type='password' value='11111111'></td><td class='table-row'>"+
+                        "<input id='"+state+"_defstate' class = 'switch' type='checkbox'></td>"+
+                        "<td><div class='edit-buttons'><input id='edit-user' class='button small' type='button' value='Edit'><input class='button small alert' id='delete-user' type='button' value='Delete'></div>"+
+                        "<div hidden class='save-buttons'><input id='save-user' class='button small' type='button' value='Save'><input class='button small alert' id='cancel-save-user' type='button' value='Cancel'></div></td></tr>");
 
-            }
-            count++;
-            $(".table-row input").attr('disabled', true);
-            $('.switch').lc_switch();
-        });
-    }
+                }
+                count++;
+                $(".table-row input").attr('disabled', true);
+                $('.switch').lc_switch();
+            });
+        }
+    });
+
     $("#add-user").click(function(){
         if (newUser == 0) {
             var lastCount = parseInt($("#all-user-table tr:last td:first").html());
@@ -88,15 +90,19 @@ $(document).ready(function () {
             message     : "Are you sure you want to delete this user?"
         }).done(function(){
             var sid = $.cookie('sid');
-            console.log(sid+" "+id);
-            var deleteUser = getResp1({"sid": sid, "id": id}, 'user/delete/');
-            // // console.log(deleted);
-            if (deleteUser.result === true){
-                $.MessageBox("User was deleted!!!");
-                $("#all-user-table").find("#"+id).hide();
-            } else {
-                $.MessageBox("User was not deleted!!!\n"+deleteUser.result.msg);
-            }
+
+            getResp2({"sid": sid, "id": id}, 'user/delete/', function(response){
+                var deleteUser = response;
+                // // console.log(deleted);
+                if (deleteUser.result === true){
+                    $.MessageBox("User was deleted!!!");
+                    $("#all-user-table").find("#"+id).hide();
+                } else {
+                    $.MessageBox("User was not deleted!!!\n"+deleteUser.result.msg);
+                }
+            });
+
+
         }).fail(function(){
         });
         } else {
@@ -124,21 +130,26 @@ $(document).ready(function () {
             message     : "Are you sure you want to save this user?"
         }).done(function(){
             var sid = $.cookie('sid');
-            console.log(newLogin+" "+newPassword+" "+newStatus);
-            var updateUser = getResp1({"sid": sid, "id": id, "login":newLogin, "pass":newPassword}, 'user/update/');
-            if (updateUser.result === true){
-                $.MessageBox("User was saved!!!");
-                $("#"+id+" .table-row input").attr('disabled', true);
-                $("#"+id+" .table-row .lcs_wrap div").addClass('lcs_disabled');
-                $("#"+id+" .edit-buttons").show();
-                $("#"+id+" .save-buttons").hide();
-                $("#"+id+" .table-row .pass-row").attr('type','password');
-                $("#"+id+" .table-row .pass-row").val('11111111');
-                $("#"+id+" .table-row .login-row").attr('id',newLogin+"_deflog");
-                $("#"+id+" .table-row .switch").attr('id',newStatus+'_defstate');
-            } else {
-                $.MessageBox("User was not saved!!!\n"+updateUser.result.msg);
-            }
+
+
+            getResp2({"sid": sid, "id": id, "login":newLogin, "pass":newPassword}, 'user/update/', function(response){
+                var updateUser = response;
+                if (updateUser.result === true){
+                    $.MessageBox("User was saved!!!");
+                    $("#"+id+" .table-row input").attr('disabled', true);
+                    $("#"+id+" .table-row .lcs_wrap div").addClass('lcs_disabled');
+                    $("#"+id+" .edit-buttons").show();
+                    $("#"+id+" .save-buttons").hide();
+                    $("#"+id+" .table-row .pass-row").attr('type','password');
+                    $("#"+id+" .table-row .pass-row").val('11111111');
+                    $("#"+id+" .table-row .login-row").attr('id',newLogin+"_deflog");
+                    $("#"+id+" .table-row .switch").attr('id',newStatus+'_defstate');
+                } else {
+                    $.MessageBox("User was not saved!!!\n"+updateUser.result.msg);
+                }
+            });
+
+
         }).fail(function(){
         });
     } else {
@@ -159,23 +170,26 @@ $(document).ready(function () {
             }).done(function() {
                 if (newLogin != "" && newPassword != "") {
                 var sid = $.cookie('sid');
-                console.log(newLogin + " " + newPassword + " " + newStatus);
-                var createUser = getResp1({"sid": sid, "login": newLogin, "pass": newPassword}, 'user/create/');
-                if (createUser.result === true) {
-                    $.MessageBox("User was created!!!");
-                    $("#" + id + " .table-row input").attr('disabled', true);
-                    $("#" + id + " .table-row .lcs_wrap div").addClass('lcs_disabled');
-                    $("#" + id + " .edit-buttons").show();
-                    $("#" + id + " .save-buttons").hide();
-                    $("#" + id + " .table-row .pass-row").attr('type', 'password');
-                    $("#" + id + " .table-row .pass-row").val('11111111');
-                    $("#" + id + " .table-row .login-row").attr('id', newLogin + "_deflog");
-                    $("#" + id + " .table-row .switch").attr('id', newStatus + '_defstate');
-                    $("#" + id).attr('id', createUser.id);
-                    newUser = 0;
-                } else {
-                    $.MessageBox("User was not saved!!!\n" + createUser.result.msg);
-                }
+                    getResp2({"sid": sid, "login": newLogin, "pass": newPassword}, 'user/create/', function(response){
+                        var createUser = response;
+                        if (createUser.result === true) {
+                            $.MessageBox("User was created!!!");
+                            $("#" + id + " .table-row input").attr('disabled', true);
+                            $("#" + id + " .table-row .lcs_wrap div").addClass('lcs_disabled');
+                            $("#" + id + " .edit-buttons").show();
+                            $("#" + id + " .save-buttons").hide();
+                            $("#" + id + " .table-row .pass-row").attr('type', 'password');
+                            $("#" + id + " .table-row .pass-row").val('11111111');
+                            $("#" + id + " .table-row .login-row").attr('id', newLogin + "_deflog");
+                            $("#" + id + " .table-row .switch").attr('id', newStatus + '_defstate');
+                            $("#" + id).attr('id', createUser.id);
+                            newUser = 0;
+                        } else {
+                            $.MessageBox("User was not saved!!!\n" + createUser.result.msg);
+                        }
+                    });
+
+
             } else {
                     $.MessageBox("Please enter login and password!!!");
                 }
@@ -269,4 +283,46 @@ function getResp1(data, url) {
     }
 
 
+}
+
+
+function getResp2(data,url, callback){
+    $.ajax({
+        type: "POST",
+        crossDomain: true,
+        'global': false,
+        'async': true,
+        dataType: "json",
+        data: JSON.stringify(data),
+        url: "http://" + $.cookie('domain') + "/sys/" + url,
+        success: function (data) {
+            if (data.result === true && data) { //if valid session
+                callback(data);
+            }
+            else {
+                if (data.result === false && (data.msg).indexOf('invalid session') == -1) {
+                    callback(data);
+                } else  {
+                    $.removeCookie('sid');
+                    window.location.href = getStartLink();
+                    return false;
+                }
+            }
+        }
+    });
+
+}
+//get task
+function getStartLink() {
+    console.log($(location).attr('href'));
+    var link = $(location).attr('href');
+    var linkArr = link.split("//");
+    var linkArr2 = linkArr[1].split("/");
+    var length = linkArr2.length;
+    var startLink = "http://";
+    for (var i = 0; i < (length - 1); i++) {
+        startLink = startLink + linkArr2[i] + "/";
+    }
+    console.log(startLink);
+    return startLink;
 }
