@@ -82,7 +82,7 @@
             endDate = end.format('YYYY/MM/D');
         });
 
-        console.log($.cookie('sid'));
+        // console.log($.cookie('sid'));
         if ($('#wrapper').length > 0) {
             //get list of tasks
 
@@ -165,7 +165,7 @@
                 data_set.sdate = new Date(date_arr[0] + " 0:00:00").getTime() / 1000.0;
                 data_set.edate = new Date(date_arr[1] + " 23:59:59").getTime() / 1000.0;
             }
-            console.log(data_set);
+            // console.log(data_set);
 
             var a = getTasks(data_set);
 
@@ -182,7 +182,7 @@
             var searchString = $(this).parent().prev().find('input').val();
 
             list.each(function () {
-                console.log($(this).text().indexOf(searchString))
+                // console.log($(this).text().indexOf(searchString))
                 if ($(this).text().indexOf(searchString) == -1) {
                     $(this).addClass('hidden');
                 } else {
@@ -235,10 +235,10 @@
             success: function (data) {
                 myVariable = data;
 
-                console.log(myVariable)
+                // console.log(myVariable)
             },
             error: function (xhr, ajaxOptions, thrownError) {
-                console.log(thrownError)
+                // console.log(thrownError)
                 myVariable = false;
             }
 
