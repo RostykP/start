@@ -44,7 +44,7 @@
                 $.cookie('sid', sid.sid);
                 // console.log($(location));
                 // console.log($(location).attr('href'));
-                window.location.href = $(location).attr('href') + 'taskpage.html';
+                window.location.href = getStartLink() + 'taskpage.html';
             } else {
                 $.MessageBox(sid.msg);
             }
@@ -72,24 +72,29 @@
             cancelClass: 'button alert small',
             separator: ' to ',
         }, function (start, end, label) {
-            $('#reportrange span').html(start.format('YYYY/MM/D') + ' - ' + end.format('YYYY/MM/D'));
-            $("#daterange-input").val(start.format('YYYY/MM/D') + '-' + end.format('YYYY/MM/D'));
+            $('#reportrange span').html(start.format('YYYY/MM/DD') + ' - ' + end.format('YYYY/MM/DD'));
+            $("#daterange-input").val(start.format('YYYY/MM/DD') + '-' + end.format('YYYY/MM/DD'));
             startDate = start.format('YYYY/MM/D');
             endDate = end.format('YYYY/MM/D');
         });
 
-
         console.log($.cookie('sid'));
         if ($('#wrapper').length > 0) {
             //get list of tasks
-            getTasks({"sid": $.cookie('sid')});
+
+            $( "#filter-tasks" ).trigger( "click" );
+            //getTasks({"sid": $.cookie('sid')});
         }
 
-
+        $(document).on("click", "#clear-filters", function () {
+            $("#categories").val('all');
+            $('#reportrange span').html(moment().format('YYYY/MM/DD') + ' - ' + moment().format('YYYY/MM/DD'));
+            $("#daterange-input").val(moment().format('YYYY/MM/DD') + '-' + moment().format('YYYY/MM/DD'));
+        })
         if ($('#wrapper').length > 0) {
             //get list of categories
             var array_category = getResp({"sid": $.cookie('sid')}, 'sys/offer/list/').list;
-            var list = '';
+            var list = '<option data-id="all" value="all">All categories</option>';
 
             if (array_category) {
                 for (var i = 0; i < array_category.length; i++) {
@@ -97,7 +102,6 @@
                     list += '<option data-id="' + array_category[i].id + '" value="' + array_category[i].name + '">' + array_category[i].country + ' ' + array_category[i].name + '</option>';
                 }
                 $("#categories").html(list);
-
             }
             //OFFERS
             var goods_table = $('#goods');
@@ -138,7 +142,6 @@
         //filter-tasks
         $('#filter-tasks').click(function (e) {
             e.preventDefault();
-
             var category = $('#categories').val(),
                 data_cat = (category == 'all') ? '' : category;
 
@@ -147,7 +150,7 @@
             if (data_cat != '') {
                 data_set.oname = data_cat;
             }
-            var date_val = $("#daterange-input").val();
+            var date_val = $("#current-date").html();
             if (date_val.length > 0) {
                 var date_arr = date_val.split('-');
                 data_set.sdate = new Date(date_arr[0] + " 0:00:00").getTime() / 1000.0;
@@ -207,28 +210,8 @@
 
     });
 
-//function getIP(){
-//    var IP="";
-    //   $.ajax({
-    //      url: "IP.txt",
-    //      dataType: "text",
-    //     async: true,
-    //    success: function(msg){
-    //        alert(msg)
-//            IP = msg.split('\n')[0].replace(/\n+$/m , '');
-    //       }
-    //   });
-    //   alert(IP)
-    //   return IP;
-//}
     function getResp(data, url) {
         var myVariable;
-        //  var IP=getIP();
-        //$.get('IP.txt', function(dataIP){
-        //IP = dataIP.split('\n')[0].replace(/\n+$/m , '');
-        //IP = "http://"+IP+"/sys/" + url;
-        // });
-        //alert("http://"+IP+"/sys/" + url)
         $.ajax({
             type: "POST",
             crossDomain: true,
@@ -243,10 +226,6 @@
                 console.log(myVariable)
             },
             error: function (xhr, ajaxOptions, thrownError) {
-                //if end of session go to login
-                // if(!((window.location.href).indexOf('login') != -1)){
-                //     window.location.href = $(location).attr('href')+'login.html';
-                // }
                 console.log(thrownError)
                 myVariable = false;
             }
@@ -259,6 +238,7 @@
             if (myVariable.result === false && (myVariable.msg).indexOf('invalid session') == -1) {
                 return myVariable;
             } else {
+                $.removeCookie('sid');
                 window.location.href = getStartLink1();
                 return false;
             }
@@ -424,13 +404,7 @@
             }
         });
 
-        // if (_table.hasClass('new')) {
-        //     popupS.alert({
-        //         content: 'Please, save your category before cancel'
-        //     });
-        // } else {
-        //
-        // }
+
         onSaveCancel(_table);
     });
 

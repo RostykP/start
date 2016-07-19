@@ -262,6 +262,7 @@ function getResp1(data, url) {
         if (myVariable.result === false && (myVariable.msg).indexOf('invalid session') == -1) {
             return myVariable;
         } else  {
+            $.removeCookie('sid');
             window.location.href = getStartLink();
             return false;
         }
