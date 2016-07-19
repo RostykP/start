@@ -88,49 +88,54 @@
 
         if ($('#wrapper').length > 0) {
             //get list of categories
-            var array_category = getResp({"sid": $.cookie('sid')}, 'sys/offer/list/').list;
-            var list = '';
 
-            if (array_category) {
-                for (var i = 0; i < array_category.length; i++) {
+            getResp2({"sid": $.cookie('sid')}, 'sys/offer/list/', function(response){
+                var array_category = response.list;
+                var list = '';
 
-                    list += '<option data-id="' + array_category[i].id + '" value="' + array_category[i].name + '">' + array_category[i].country + ' ' + array_category[i].name + '</option>';
+                if (array_category) {
+                    for (var i = 0; i < array_category.length; i++) {
+
+                        list += '<option data-id="' + array_category[i].id + '" value="' + array_category[i].name + '">' + array_category[i].country + ' ' + array_category[i].name + '</option>';
+                    }
+                    $("#categories").html(list);
+
                 }
-                $("#categories").html(list);
+                //OFFERS
+                var goods_table = $('#goods');
+                if (goods_table.length > 0) {
+                    var table = '',
+                        selected = "selected ";
 
-            }
-            //OFFERS
-            var goods_table = $('#goods');
-            if (goods_table.length > 0) {
-                var table = '',
-                    selected = "selected ";
+                    $.each(array_category, function (key, value) {
+                        var position = list.indexOf('data-id="' + value.id + '"'),
+                            output = [list.slice(0, position), selected, list.slice(position)].join(''),
+                            status = value.state == 1 ? 'checked' : '';
 
-                $.each(array_category, function (key, value) {
-                    var position = list.indexOf('data-id="' + value.id + '"'),
-                        output = [list.slice(0, position), selected, list.slice(position)].join(''),
-                        status = value.state == 1 ? 'checked' : '';
+                        table += '<tr data-cat-id="' + value.id + '">' +
+                            '<td>' + (key + 1) + '</td>' + // №
+                            '<td><select disabled data-current = "' + value.id + '">' + output + '</select></td>' + // Category
+                            '<td><input data-current="' + value.url + '" name="link" value="' + value.url + '" type="text" disabled> </td>' + // URL
+                            '<td><input data-current="' + value.country + '" name="country" type="text" value="' + value.country + '" disabled></td>' + // Country
+                            '<td class="js-code"><input type="text" onfocus="this.blur()" onkeydown="return false;"   value="JS code" disabled><textarea class="hidden">'+value.js+'</textarea><textarea class="hidden default">'+value.js+'</textarea></td>' + // JS code
+                            '<td><input data-current="' + value.amount + '" type="number" min="1" name="amount" value="' + value.amount + '" disabled></td>' + // Amount
+                            '<td class="status"><div class="switch"><input data-current="' + value.state + '" disabled class="switch-input" id="status-' + value.id + '" type="checkbox" ' + status + ' name="status"><label class="switch-paddle" for="status-' + value.id + '"></label></div></td>' + // Status
+                            '<td><div class="columns small-6 text-center"><button type="button" class="button small edit">Edit</button></div><div class="columns small-6 text-center"><button type="button" class="button alert small delete">Delete</button></div>' +
+                            '<div class="columns small-6 text-center"><button type="button" class="button small success  save hidden">Save</button></div><div class="columns small-6 text-center"><button type="button" class="button alert small cancel hidden">Cancel</button></div></td>' + // Actions
+                            '</tr>';
 
-                    table += '<tr data-cat-id="' + value.id + '">' +
-                        '<td>' + (key + 1) + '</td>' + // №
-                        '<td><select disabled data-current = "' + value.id + '">' + output + '</select></td>' + // Category
-                        '<td><input data-current="' + value.url + '" name="link" value="' + value.url + '" type="text" disabled> </td>' + // URL
-                        '<td><input data-current="' + value.country + '" name="country" type="text" value="' + value.country + '" disabled></td>' + // Country
-                        '<td class="js-code"><input type="text" onfocus="this.blur()" onkeydown="return false;"   value="JS code" disabled><textarea class="hidden">'+value.js+'</textarea><textarea class="hidden default">'+value.js+'</textarea></td>' + // JS code
-                        '<td><input data-current="' + value.amount + '" type="number" min="1" name="amount" value="' + value.amount + '" disabled></td>' + // Amount
-                        '<td class="status"><div class="switch"><input data-current="' + value.state + '" disabled class="switch-input" id="status-' + value.id + '" type="checkbox" ' + status + ' name="status"><label class="switch-paddle" for="status-' + value.id + '"></label></div></td>' + // Status
-                        '<td><div class="columns small-6 text-center"><button type="button" class="button small edit">Edit</button></div><div class="columns small-6 text-center"><button type="button" class="button alert small delete">Delete</button></div>' +
-                        '<div class="columns small-6 text-center"><button type="button" class="button small success  save hidden">Save</button></div><div class="columns small-6 text-center"><button type="button" class="button alert small cancel hidden">Cancel</button></div></td>' + // Actions
-                        '</tr>';
+                    });
 
-                });
+                    goods_table.find('tbody').html(table);
+                    callSelect(goods_table);
 
-                goods_table.find('tbody').html(table);
-                callSelect(goods_table);
+                    //trigger change
+                    $('#per-page').change();
 
-                //trigger change
-                $('#per-page').change();
+                }
+            })
 
-            }
+
 
         }
 
@@ -443,11 +448,13 @@
             onSubmit: function () {
                 _table.remove();
                 //remove category
-                var del = getResp({
+
+                getResp2({
                     'sid': $.cookie('sid'),
                     'id': parseInt(_table.attr('data-cat-id'))
-                }, 'offer/delete/');
+                }, 'offer/delete/', function(response){
 
+                });
             }
         });
     });
@@ -496,48 +503,52 @@
             }
 
 
-            var result = getResp(data, url);
-            console.log(result);
-            if (result.result === true && action == 1) { //if update successful
-                popupS.alert({
-                    content: 'Category was successfully updated!'
-                });
-                onSaveCancel(_table);
-            } else if (result.result === true && action == 0) { //if create new
-                popupS.alert({
-                    content: 'Category created successfully!'
-                });
-                _table.removeClass('new'); //remove new Classname if there was a new category
+            getResp2(data, url, function(response){
+                var result = response;
+                console.log(result);
+                if (result.result === true && action == 1) { //if update successful
+                    popupS.alert({
+                        content: 'Category was successfully updated!'
+                    });
+                    onSaveCancel(_table);
+                } else if (result.result === true && action == 0) { //if create new
+                    popupS.alert({
+                        content: 'Category created successfully!'
+                    });
+                    _table.removeClass('new'); //remove new Classname if there was a new category
 
-                var current_id =  result.id;
+                    var current_id =  result.id;
 
-                $.each(_td, function (key, value) {
-                    //if input
-                    var _input = $(this).find('input'),
-                        _select = $(this).find('select'),
-                        _textarea = $(this).find('textarea:not(.default)');
+                    $.each(_td, function (key, value) {
+                        //if input
+                        var _input = $(this).find('input'),
+                            _select = $(this).find('select'),
+                            _textarea = $(this).find('textarea:not(.default)');
 
-                    if (_input.length > 0) {
-                        if (_input.attr('type') != 'checkbox' && _input.next('textarea').length==0) {
-                            _input.attr('data-current', _input.val());
-                        }else if(_textarea.length > 0){
-                            _textarea.next().html(_textarea.html());
-                        }else {
-                            var status = _input.is(':checked') ? 1 : 0;
-                            _input.attr('data-current', status);
+                        if (_input.length > 0) {
+                            if (_input.attr('type') != 'checkbox' && _input.next('textarea').length==0) {
+                                _input.attr('data-current', _input.val());
+                            }else if(_textarea.length > 0){
+                                _textarea.next().html(_textarea.html());
+                            }else {
+                                var status = _input.is(':checked') ? 1 : 0;
+                                _input.attr('data-current', status);
+                            }
                         }
-                    }
-                });
-                //update data-current tags
-                _table.attr('data-cat-id', parseInt(current_id));
+                    });
+                    //update data-current tags
+                    _table.attr('data-cat-id', parseInt(current_id));
 
-                onSaveCancel(_table);
-            } else if (result.result === false) {
-                popupS.alert({
-                    content: result.msg
-                });
+                    onSaveCancel(_table);
+                } else if (result.result === false) {
+                    popupS.alert({
+                        content: result.msg
+                    });
 
-            }
+                }
+            });
+
+
 
 
         }
@@ -719,5 +730,22 @@
         }
 
     });
+
+    function getResp2(data,url, callback){
+        $.ajax({
+            type: "POST",
+            crossDomain: true,
+            'global': false,
+            'async': true,
+            dataType: "json",
+            data: JSON.stringify(data),
+            url: "http://" + $.cookie('domain') + "/sys/" + url,
+            success: function (data) {
+                callback(data);
+            }
+        });
+
+    }
+
 
 }(jQuery, window, document));
