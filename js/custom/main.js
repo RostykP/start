@@ -741,6 +741,11 @@
                         return false;
                     }
                 }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                $.removeCookie('sid');
+                window.location.href = getStartLink();
+                return false;
             }
         });
 
