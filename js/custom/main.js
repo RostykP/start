@@ -8,6 +8,142 @@
         startDate,
         endDate;
     var idForDelete;
+    var Base64 = {
+
+
+        _keyStr: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
+
+
+        encode: function(input) {
+            var output = "";
+            var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
+            var i = 0;
+            input = Base64._utf8_encode(input);
+
+            while (i < input.length) {
+
+                chr1 = input.charCodeAt(i++);
+                chr2 = input.charCodeAt(i++);
+                chr3 = input.charCodeAt(i++);
+
+                enc1 = chr1 >> 2;
+                enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
+                enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+                enc4 = chr3 & 63;
+
+                if (isNaN(chr2)) {
+                    enc3 = enc4 = 64;
+                } else if (isNaN(chr3)) {
+                    enc4 = 64;
+                }
+
+                output = output + this._keyStr.charAt(enc1) + this._keyStr.charAt(enc2) + this._keyStr.charAt(enc3) + this._keyStr.charAt(enc4);
+
+            }
+
+            return output;
+        },
+
+
+        decode: function(input) {
+            var output = "";
+            var chr1, chr2, chr3;
+            var enc1, enc2, enc3, enc4;
+            var i = 0;
+
+            var c2;
+            input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
+
+            while (i < input.length) {
+
+                enc1 = this._keyStr.indexOf(input.charAt(i++));
+                enc2 = this._keyStr.indexOf(input.charAt(i++));
+                enc3 = this._keyStr.indexOf(input.charAt(i++));
+                enc4 = this._keyStr.indexOf(input.charAt(i++));
+
+                chr1 = (enc1 << 2) | (enc2 >> 4);
+                chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
+                chr3 = ((enc3 & 3) << 6) | enc4;
+
+                output = output + String.fromCharCode(chr1);
+
+                if (enc3 != 64) {
+                    output = output + String.fromCharCode(chr2);
+                }
+                if (enc4 != 64) {
+                    output = output + String.fromCharCode(chr3);
+                }
+
+            }
+
+            output = Base64._utf8_decode(output);
+
+            return output;
+
+        },
+
+        _utf8_encode: function(string) {
+            string = string.replace(/\r\n/g, "\n");
+            var utftext = "";
+
+            for (var n = 0; n < string.length; n++) {
+
+                var c = string.charCodeAt(n);
+
+                if (c < 128) {
+                    utftext += String.fromCharCode(c);
+                }
+                else if ((c > 127) && (c < 2048)) {
+                    utftext += String.fromCharCode((c >> 6) | 192);
+                    utftext += String.fromCharCode((c & 63) | 128);
+                }
+                else {
+                    utftext += String.fromCharCode((c >> 12) | 224);
+                    utftext += String.fromCharCode(((c >> 6) & 63) | 128);
+                    utftext += String.fromCharCode((c & 63) | 128);
+                }
+
+            }
+
+            return utftext;
+        },
+
+        _utf8_decode: function(utftext) {
+            var string = "";
+            var i = 0;
+            var c =0;
+            var c1 = 0;
+            var c2=0;
+            var c3=0;
+            while (i < utftext.length) {
+
+                c = utftext.charCodeAt(i);
+
+                if (c < 128) {
+                    string += String.fromCharCode(c);
+                    i++;
+                }
+                else if ((c > 191) && (c < 224)) {
+                    c2 = utftext.charCodeAt(i + 1);
+                    string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
+                    i += 2;
+                }
+                else {
+                    c2 = utftext.charCodeAt(i + 1);
+                    c3 = utftext.charCodeAt(i + 2);
+                    string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
+                    i += 3;
+                }
+
+            }
+
+            return string;
+        }
+
+    }
+
+
+
 
 
     $doc.ready(function (jQuery) {
@@ -89,7 +225,6 @@
             $( "#filter-tasks" ).trigger( "click" );
             //getTasks({"sid": $.cookie('sid')});
         }
-
         $(document).on("click", "#clear-filters", function () {
             $("#categories").val('all');
             $('#reportrange span').html(moment().format('YYYY/MM/DD') + ' - ' + moment().format('YYYY/MM/DD'));
@@ -98,14 +233,13 @@
         if ($('#wrapper').length > 0) {
             //get list of categories
 
-            getResp2({"sid": $.cookie('sid')}, 'sys/offer/list/', function(response){
+            getResp2({"sid": $.cookie('sid')}, 'offer/list/', function(response){
                 var array_category = response.list;
                 var list = '<option data-id="all" value="all">All categories</option>';
 
                 if (array_category) {
                     for (var i = 0; i < array_category.length; i++) {
-
-                        list += '<option data-id="' + array_category[i].id + '" value="' + array_category[i].name + '">' + array_category[i].country + ' ' + array_category[i].name + '</option>';
+                        list += '<option data-id="' + array_category[i].id + '" value="' + decodeURI(Base64.decode(array_category[i].name))  + '">' + array_category[i].country + ' ' + decodeURI(Base64.decode(array_category[i].name)) + '</option>';
                     }
                     $("#categories").html(list);
                 }
@@ -119,13 +253,12 @@
                         var position = list.indexOf('data-id="' + value.id + '"'),
                             output = [list.slice(0, position), selected, list.slice(position)].join(''),
                             status = value.state == 1 ? 'checked' : '';
-
                         table += '<tr data-cat-id="' + value.id + '">' +
                             '<td>' + (key + 1) + '</td>' + // №
                             '<td><select disabled data-current = "' + value.id + '">' + output + '</select></td>' + // Category
-                            '<td><input data-current="' + value.url + '" name="link" value="' + value.url + '" type="text" disabled> </td>' + // URL
+                            '<td><input data-current="' +  Base64.decode(value.url) + '" name="link" value="' +  Base64.decode(value.url) + '" type="text" disabled> </td>' + // URL
                             '<td><input data-current="' + value.country + '" name="country" type="text" value="' + value.country + '" disabled></td>' + // Country
-                            '<td class="js-code"><input type="text" onfocus="this.blur()" onkeydown="return false;"   value="JS code" disabled><textarea class="hidden">'+value.js+'</textarea><textarea class="hidden default">'+value.js+'</textarea></td>' + // JS code
+                            '<td class="js-code"><input type="text" onfocus="this.blur()" onkeydown="return false;"   value="JS code" disabled><textarea class="hidden">'+ Base64.decode(value.js)+'</textarea><textarea class="hidden default">'+ Base64.decode(value.js)+'</textarea></td>' + // JS code
                             '<td><input data-current="' + value.amount + '" type="number" min="1" name="amount" value="' + value.amount + '" disabled></td>' + // Amount
                             '<td class="status"><div class="switch"><input data-current="' + value.state + '" disabled class="switch-input" id="status-' + value.id + '" type="checkbox" ' + status + ' name="status"><label class="switch-paddle" for="status-' + value.id + '"></label></div></td>' + // Status
                             '<td><div class="columns small-6 text-center"><button type="button" class="button small edit">Edit</button></div><div class="columns small-6 text-center"><button type="button" class="button alert small delete">Delete</button></div>' +
@@ -316,7 +449,7 @@
         var taskDetail;
         var sid = $.cookie('sid');
         var id = this.id;
-
+        $(this).addClass('active');
 
 
         getResp2({"sid": $.cookie('sid'), "id": parseInt(id)}, 'task/get/', function(response){
@@ -464,7 +597,6 @@
         } else _table.find('input[name=country]').addClass('error');
 
         data.name = encodeURIComponent(_table.find('select').val());
-
         //validate URL
         if (isUrlValid(_table.find('input[name=link]').val())) {
             data.url = (_table.find('input[name=link]').val());
@@ -480,7 +612,9 @@
             _table.find('input[name=amount]').removeClass('error');
         } else _table.find('input[name=amount]').addClass('error');
 
-
+        //data.js=Base64.encode(data.js);
+        //data.name=Base64.encode(data.name);
+        //data.url=Base64.encode(date.url);
         //save data
         if (_table.find('.error').length == 0) {
 
@@ -490,7 +624,9 @@
                 action = 0;
                 delete data.id; //remove id if new one
             }
-
+            data.name= btoa(data.name);
+            data.js=btoa(data.js);
+            data.url=btoa(data.url);
             getResp2(data, url, function(response){
                 var result = response;
 
@@ -737,6 +873,7 @@
                         callback(data);
                     } else  {
                         $.removeCookie('sid');
+                        $.removeCookie('domain');
                         window.location.href = getStartLink();
                         return false;
                     }
@@ -744,6 +881,7 @@
             },
             error: function (xhr, ajaxOptions, thrownError) {
                 $.removeCookie('sid');
+                $.removeCookie('domain');
                 window.location.href = getStartLink();
                 return false;
             }

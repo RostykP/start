@@ -304,6 +304,7 @@ function getResp2(data,url, callback){
                     callback(data);
                 } else  {
                     $.removeCookie('sid');
+                    $.removeCookie('domain');
                     window.location.href = getStartLink();
                     return false;
                 }
