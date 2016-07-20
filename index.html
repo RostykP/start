@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Project</title>
-    <link rel="stylesheet" href="css/main.css" type="text/css" media="screen" />
-    <link rel="stylesheet" href="css/foundation.min.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="css/main.css" type="text/css" media="screen"/>
+    <link rel="stylesheet" href="css/foundation.min.css" type="text/css" media="screen"/>
 
 </head>
 <body>
@@ -21,7 +21,9 @@
                     <label>Password
                         <input name="pass" type="password" placeholder="Password" required>
                     </label>
-                    <p><button id="submit" type="submit" class="button expanded">Log In</button></p>
+                    <p>
+                        <button id="submit" type="submit" class="button expanded">Log In</button>
+                    </p>
                 </div>
             </form>
 
@@ -35,35 +37,33 @@
 <script type="text/javascript" src="js/messagebox.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
-            readTextFile("IP.txt");
-            if ($.cookie('sid')!=undefined && $.cookie('sid')!=null) {
-                var link = $(location).attr('href');
-                var linkArr = link.split("//");
-                var linkArr2 = linkArr[1].split("/");
-                var length = linkArr2.length;
-                var startLink = "http://";
-                for (var i = 0; i < (length - 1); i++) {
-                    startLink = startLink + linkArr2[i] + "/";
-                }
-                 window.location.href = startLink + 'taskpage.html';
+        //************************************************************
+        //_______________________________________________________//
+
+        var IP = '95.46.98.99';
+        //_______________________________________________________//
+        //************************************************************
+
+
+        getIP(IP); //set IP in cookie
+        if ($.cookie('sid') != undefined && $.cookie('sid') != null) {
+            var link = $(location).attr('href');
+            var linkArr = link.split("//");
+            var linkArr2 = linkArr[1].split("/");
+            var length = linkArr2.length;
+            var startLink = "http://";
+            for (var i = 0; i < (length - 1); i++) {
+                startLink = startLink + linkArr2[i] + "/";
             }
+            window.location.href = startLink + 'taskpage.html';
+        }
     });
-    function readTextFile(file) {
-        var rawFile = new XMLHttpRequest();
-        rawFile.open("GET", file, false);
-        rawFile.onreadystatechange = function ()
-        {
-            if(rawFile.readyState === 4)
-            {
-                if(rawFile.status === 200 || rawFile.status == 0)
-                {
-                    var allText = rawFile.responseText;
-                    $.cookie('domain', allText);
-                }
-            }
-        };
-        rawFile.send(null);
+    function getIP(ip) {
+        if (!$.cookie('domain')) {
+            $.cookie('domain', ip);
+        }
     }
+
 </script>
 </body>
 </html>
