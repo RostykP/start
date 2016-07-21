@@ -167,6 +167,7 @@
 
 
         $('#current-date').html(moment().format("YYYY/MM/D")+" - "+moment().format("YYYY/MM/D"));
+        $("#daterange-input").val(moment().format("YYYY/MM/D")+" - "+moment().format("YYYY/MM/D"));
         $('#submit').click(function (e) {
 
 
@@ -217,7 +218,10 @@
             startDate = start.format('YYYY/MM/D');
             endDate = end.format('YYYY/MM/D');
         });
-
+        $('#reportrange').on('cancel.daterangepicker', function(ev, picker) {
+            $('#reportrange span').html(picker.startDate.format('YYYY/MM/DD') + ' - ' + picker.endDate.format('YYYY/MM/DD'));
+            $("#daterange-input").val(picker.startDate.format('YYYY/MM/DD') + ' - ' + picker.endDate.format('YYYY/MM/DD'));
+        });
         // console.log($.cookie('sid'));
         if ($('#wrapper').length > 0) {
             //get list of tasks
@@ -458,7 +462,7 @@
             console.log(idForDelete);
             $('#show-product-info').removeClass('hidden');
             $('a#status').attr('data-status', a.state);
-            $('#prod-info').html('<b>Date:</b>' + moment(a.ts * 1000).format('YYYY-MM-DD HH:mm:ss') + '; ' + '<b>Task: #</b>' + a.id + '; ' + '<b>Offer:</b>' + a.country + ' - ' + a.offerName + '; ' + '<b>Af id:</b>' + a.aid);
+            $('#prod-info').html('<b>Date:</b>' + moment(a.ts * 1000).format('YYYY-MM-DD HH:mm:ss') + '; ' + '<b>Task: #</b>' + a.id + '; ' + '<b>Offer:</b>' + a.country + ' - ' + decodeURI(Base64.decode(a.offerName)) + '; ' + '<b>Af id:</b>' + a.aid);
             $('#product-data-d').html(decodeURIComponent(escape(window.atob(a.data))));
             $(".screenshot-list").html("");
             $.each(a.images, function (i) {
@@ -596,7 +600,7 @@
             _table.find('input[name=country]').removeClass('error');
         } else _table.find('input[name=country]').addClass('error');
 
-        data.name = encodeURIComponent(_table.find('select').val());
+        data.name = _table.find('select').val();
         //validate URL
         if (isUrlValid(_table.find('input[name=link]').val())) {
             data.url = (_table.find('input[name=link]').val());
@@ -612,9 +616,6 @@
             _table.find('input[name=amount]').removeClass('error');
         } else _table.find('input[name=amount]').addClass('error');
 
-        //data.js=Base64.encode(data.js);
-        //data.name=Base64.encode(data.name);
-        //data.url=Base64.encode(date.url);
         //save data
         if (_table.find('.error').length == 0) {
 
@@ -624,7 +625,7 @@
                 action = 0;
                 delete data.id; //remove id if new one
             }
-            data.name= btoa(data.name);
+            data.name=Base64.encode(data.name);
             data.js=btoa(data.js);
             data.url=btoa(data.url);
             getResp2(data, url, function(response){
