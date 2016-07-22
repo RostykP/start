@@ -587,7 +587,7 @@
     });
 
     $doc.on('click','#refresh',function () {
-       $('#quick-search').click();
+       $('#filter-tasks').click();
     });
     //save button
     $doc.on('click', '#goods .save', function (e) {
