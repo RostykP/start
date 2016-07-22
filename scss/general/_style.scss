@@ -231,6 +231,18 @@ table thead tr th, table thead tr td {
         float: left;
     }
 }
+#load{
+    display: none;
+}
+.loading{
+    #load{
+        display: block;
+        position: absolute;
+        left: 50%;
+        top:50%;
+        transform:translate(-50%,-50%);
+    }
+}
 #wrapper .columns {
     padding-left: .6rem;
 }

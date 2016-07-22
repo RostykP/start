@@ -861,6 +861,7 @@
 
 
     function getResp2(data,url, callback){
+        $('body').addClass('loading');
         $.ajax({
             type: "POST",
             crossDomain: true,
@@ -883,6 +884,7 @@
                         return false;
                     }
                 }
+                $('body').removeClass('loading');
             },
             error: function (xhr, ajaxOptions, thrownError) {
                 $.removeCookie('sid');
