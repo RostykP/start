@@ -462,7 +462,7 @@
             console.log(idForDelete);
             $('#show-product-info').removeClass('hidden');
             $('a#status').attr('data-status', a.state);
-            $('#prod-info').html('<b>Date:</b>' + moment(a.ts * 1000).format('YYYY-MM-DD HH:mm:ss') + '; ' + '<b>Task: #</b>' + a.id + '; ' + '<b>Offer:</b>' + a.country + ' - ' + decodeURI(Base64.decode(a.offerName)) + '; ' + '<b>Af id:</b>' + a.aid);
+            $('#prod-info').html('<b>Date:</b>' + moment(a.ts * 1000).format('YYYY-MM-DD HH:mm:ss') + '; ' + '<b>Task: #</b>' + a.id + '; ' + '<b>Offer:</b>' + a.country + ' - ' + decodeURI(Base64.decode(a.offerName)) + '; ' + '<b>Af&#160;id:</b>' + a.aid);
             $('#product-data-d').html(decodeURIComponent(escape(window.atob(a.data))));
             $(".screenshot-list").html("");
             $.each(a.images, function (i) {
@@ -503,8 +503,8 @@
             placeholder: 'Input Text',     // only available for mode: 'prompt'
             flagCloseByEsc: false,
             flagCloseByOverlay: false,
-            labelOk:     'Yes',
-            labelCancel: 'No',
+            labelCancel: 'Cancel',
+            labelOk:     'OK',
             onOpen: function () {
                 var myTextarea = document.getElementById("editor");
                 editor = CodeMirror.fromTextArea(myTextarea, {
@@ -570,6 +570,7 @@
         var _table = $(this).parents('tr');
 
         popupS.confirm({
+            className: 'additionalClassName',
             content: 'Do you want to delete a current category?',
             onSubmit: function () {
                 _table.remove();
@@ -585,6 +586,9 @@
         });
     });
 
+    $doc.on('click','#refresh',function () {
+       $('#quick-search').click();
+    });
     //save button
     $doc.on('click', '#goods .save', function (e) {
         var _table = $(this).parents('tr'),

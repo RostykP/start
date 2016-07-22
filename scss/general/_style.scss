@@ -224,7 +224,13 @@ table thead tr th, table thead tr td {
         text-align: center;
     }
 }
-
+.additionalClass .popupS-buttons, .additionalClassName .popupS-buttons{
+    width: 170px;
+    margin: 0 auto;
+    #popupS-button-ok{
+        float: left;
+    }
+}
 #wrapper .columns {
     padding-left: .6rem;
 }
