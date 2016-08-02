@@ -233,6 +233,7 @@
             $("#categories").val('all');
             $('#reportrange span').html(moment().format('YYYY/MM/DD') + ' - ' + moment().format('YYYY/MM/DD'));
             $("#daterange-input").val(moment().format('YYYY/MM/DD') + '-' + moment().format('YYYY/MM/DD'));
+            $( "#filter-tasks" ).trigger( "click" );
         })
         if ($('#wrapper').length > 0) {
             //get list of categories
@@ -302,10 +303,7 @@
                 data_set.sdate = new Date(date_arr[0] + " 0:00:00").getTime() / 1000.0;
                 data_set.edate = new Date(date_arr[1] + " 23:59:59").getTime() / 1000.0;
             }
-            // console.log(data_set);
-
             var a = getTasks(data_set);
-
 
         });
 
@@ -319,7 +317,6 @@
             var searchString = $(this).parent().prev().find('input').val();
 
             list.each(function () {
-                // console.log($(this).text().indexOf(searchString))
                 if ($(this).text().indexOf(searchString) == -1) {
                     $(this).addClass('hidden');
                 } else {
@@ -346,7 +343,7 @@
                     } else {
                         $.MessageBox("Task was not deleted!!!");
                     }
-                })  ;
+                });
 
             }).fail(function () {
 
@@ -420,22 +417,15 @@
         console.log(startLink);
         return startLink;
     }
-
     function getTasks(data) {
         getResp2(data, 'task/list/', function(response){
             var tasks = response;
             if (tasks) {
+
                 var res = '';
                 $.each(tasks.list, function (i) {
-                    // $.MessageBox( a.list[i].id );
-                    var date = new Date(tasks.list[i].ts * 1000);
-                    var month = (1 + date.getMonth()).toString();
-                    month = month.length > 1 ? month : '0' + month;
-                    var day = date.getDate().toString();
-                    day = day.length > 1 ? day : '0' + day;
-                    var sec = date.getSeconds().toString();
-                    sec = sec.length > 1 ? sec : '0' + sec;
-                    var newDate = date.getFullYear() + "-" + month + "-" + day + "<br> " + date.getHours() + ":" + date.getMinutes() + ":" + sec;
+
+                    var newDate = (moment(tasks.list[i].ts * 1000)).format('YYYY-MM-DD')+'<br>'+ (moment(tasks.list[i].ts * 1000)).format('HH:mm:ss');
                     res += "<li class='task-list-class' id='" + tasks.list[i].id + "' ><span>" + tasks.list[i].id + " -</span><span>" + newDate + "</span></li>";
 
                 });
@@ -445,6 +435,7 @@
         });
 
     }
+
 
 
     $(document).on("click", ".task-list-class", function () {
