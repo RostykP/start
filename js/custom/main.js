@@ -369,10 +369,8 @@
             success: function (data) {
                 myVariable = data;
 
-                // console.log(myVariable)
             },
             error: function (xhr, ajaxOptions, thrownError) {
-                // console.log(thrownError)
                 myVariable = false;
             }
 
@@ -602,7 +600,6 @@
             _table.find('input[name=link]').removeClass('error');
         } else _table.find('input[name=link]').addClass('error');
 
-
         data.js = _table.find('textarea:not(.default)').html();
         data.state = (_table.find('input.switch-input').is(':checked')) ? 1 : 0;
 
@@ -623,6 +620,8 @@
             data.name=Base64.encode(data.name);
             data.js=btoa(data.js);
             data.url=btoa(data.url);
+
+            data.delay=data.amount;
             getResp2(data, url, function(response){
                 var result = response;
 
