@@ -425,17 +425,11 @@
         getResp2(data, 'task/list/', function(response){
             var tasks = response;
             if (tasks) {
+
                 var res = '';
                 $.each(tasks.list, function (i) {
-                    // $.MessageBox( a.list[i].id );
-                    var date = new Date(tasks.list[i].ts * 1000);
-                    var month = (1 + date.getMonth()).toString();
-                    month = month.length > 1 ? month : '0' + month;
-                    var day = date.getDate().toString();
-                    day = day.length > 1 ? day : '0' + day;
-                    var sec = date.getSeconds().toString();
-                    sec = sec.length > 1 ? sec : '0' + sec;
-                    var newDate = date.getFullYear() + "-" + month + "-" + day + "<br> " + date.getHours() + ":" + date.getMinutes() + ":" + sec;
+
+                    var newDate = (moment(tasks.list[i].ts* 1000)).format('YYYY-MM-DD')+'<br>'+ (moment(tasks.list[i].ts* 1000)).format('HH:mm:ss')
                     res += "<li class='task-list-class' id='" + tasks.list[i].id + "' ><span>" + tasks.list[i].id + " -</span><span>" + newDate + "</span></li>";
 
                 });
