@@ -241,10 +241,16 @@
             getResp2({"sid": $.cookie('sid')}, 'offer/list/', function(response){
                 var array_category = response.list;
                 var list = '<option data-id="all" value="all">All categories</option>';
+                var show_country = $('#goods').length ? 0 : 1;
 
                 if (array_category) {
                     for (var i = 0; i < array_category.length; i++) {
-                        list += '<option data-id="' + array_category[i].id + '" value="' + decodeURI(Base64.decode(array_category[i].name))  + '">' + array_category[i].country + ' ' + decodeURI(Base64.decode(array_category[i].name)) + '</option>';
+                        if(show_country){
+                            list += '<option  data-id="' + array_category[i].id + '" value="' + decodeURI(Base64.decode(array_category[i].name))  + '">' + array_category[i].country + ' ' + decodeURI(Base64.decode(array_category[i].name)) + '</option>';
+                        }else{
+                            list += '<option   data-id="' + array_category[i].id + '" value="' + decodeURI(Base64.decode(array_category[i].name))  + '">' + decodeURI(Base64.decode(array_category[i].name)) + '</option>';
+
+                        }
                     }
                     $("#categories").html(list);
                 }
@@ -265,6 +271,7 @@
                             '<td><input data-current="' + value.country + '" name="country" type="text" value="' + value.country + '" disabled></td>' + // Country
                             '<td class="js-code"><input type="text" onfocus="this.blur()" onkeydown="return false;"   value="JS code" disabled><textarea class="hidden">'+ Base64.decode(value.js)+'</textarea><textarea class="hidden default">'+ Base64.decode(value.js)+'</textarea></td>' + // JS code
                             '<td><input data-current="' + value.amount + '" type="number" min="1" name="amount" value="' + value.amount + '" disabled></td>' + // Amount
+                            '<td><input data-current="' + value.delay + '" type="number" min="1" name="delay" value="' + value.delay + '" disabled></td>' + // Delay
                             '<td class="status"><div class="switch"><input data-current="' + value.state + '" disabled class="switch-input" id="status-' + value.id + '" type="checkbox" ' + status + ' name="status"><label class="switch-paddle" for="status-' + value.id + '"></label></div></td>' + // Status
                             '<td><div class="columns small-6 text-center"><button type="button" class="button small edit">Edit</button></div><div class="columns small-6 text-center"><button type="button" class="button alert small delete">Delete</button></div>' +
                             '<div class="columns small-6 text-center"><button type="button" class="button small success  save hidden">Save</button></div><div class="columns small-6 text-center"><button type="button" class="button alert small cancel hidden">Cancel</button></div></td>' + // Actions
@@ -351,6 +358,23 @@
         });
 
 
+        $('#div-for-input-search input').keypress(function (e) {
+            if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
+                $('#quick-search').click();
+                return false;
+            } else {
+                return true;
+            }
+        });
+
+        //remove country from category in goods table
+        // if($('#goods').length){
+        //     $('#goods select').each(function () {
+        //         $(this).find('option')
+        //     });
+        // }
+
+
         $window.trigger('resize');
 
 
@@ -423,7 +447,7 @@
                 var res = '';
                 $.each(tasks.list, function (i) {
 
- 
+
                     var newDate = (moment(tasks.list[i].ts* 1000)).format('YYYY-MM-DD')+'<br>'+ (moment(tasks.list[i].ts* 1000)).format('HH:mm:ss')
 
                     res += "<li class='task-list-class' id='" + tasks.list[i].id + "' ><span>" + tasks.list[i].id + " -</span><span>" + newDate + "</span></li>";
@@ -610,6 +634,11 @@
             _table.find('input[name=amount]').removeClass('error');
         } else _table.find('input[name=amount]').addClass('error');
 
+        if (_table.find('input[name=delay]').val() > 0) {
+            data.delay = parseInt(_table.find('input[name=delay]').val());
+            _table.find('input[name=delay]').removeClass('error');
+        } else _table.find('input[name=delay]').addClass('error');
+
         //save data
         if (_table.find('.error').length == 0) {
 
@@ -623,7 +652,7 @@
             data.js=btoa(data.js);
             data.url=btoa(data.url);
 
-            data.delay=data.amount;
+            // data.delay=data.amount;
             getResp2(data, url, function(response){
                 var result = response;
 
@@ -692,6 +721,7 @@
                 '<td><input name="country" type="text" value="" ></td>' +
                 '<td class="js-code"><input type="text" onfocus="this.blur()" onkeydown="return false;" value="JS code" ><textarea class="hidden"></textarea><textarea class="hidden default"></textarea></td></td>' +
                 '<td><input type="number" min="1" name="amount" value="1" ></td>' +
+                '<td><input type="number" min="1" name="delay" value="1" ></td>' +
                 '<td class="status"><div class="switch"><input class="switch-input" id="status-' + last_id + '" type="checkbox" checked="" name="status"><label class="switch-paddle" for="status-' + last_id + '"></label></div></td>' +
                 '<td><div class="columns small-6 text-center"><button type="button" class="button small edit hidden">Edit</button></div><div class="columns small-6 text-center"><button type="button" class="button alert small delete hidden">Delete</button></div><div class="columns small-6 text-center"><button type="button" class="button small success save create-new">Save</button></div><div class="columns small-6 text-center"><button type="button" class="button alert small cancel">Cancel</button></div></td>' +
                 '</tr>');
@@ -703,7 +733,7 @@
 
     });
 
-    $doc.on('keydown', '#goods input[name=amount]', function (e) {
+    $doc.on('keydown', '#goods input[name=amount], #goods input[name=delay]', function (e) {
         // Allow: backspace, delete, tab, escape, enter and .
         if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
             // Allow: Ctrl+A, Command+A
