@@ -399,10 +399,34 @@
         // }
 
 
+
+
         $window.trigger('resize');
 
 
     });
+
+    $(window).keydown(function(e){
+        var li = $('#task_list li.active');
+
+        if(e.keyCode === 38) {
+            // up
+            if(li.prev().length){
+                li.removeClass('active').prev().addClass('active');
+            }
+        }
+        else if(e.keyCode === 40) {
+
+            // down
+            if(li.next().length){
+                li.removeClass('active').next().addClass('active');
+            }
+        }else if(e.keyCode ===13){
+            li.click();
+        }
+
+    });
+
 
     function getResp(data, url) {
         var myVariable;
