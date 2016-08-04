@@ -233,6 +233,7 @@
             $("#categories").val('all');
             $('#reportrange span').html(moment().format('YYYY/MM/DD') + ' - ' + moment().format('YYYY/MM/DD'));
             $("#daterange-input").val(moment().format('YYYY/MM/DD') + '-' + moment().format('YYYY/MM/DD'));
+            $( "#filter-tasks" ).trigger( "click" );
         })
         if ($('#wrapper').length > 0) {
             //get list of categories
@@ -302,10 +303,7 @@
                 data_set.sdate = new Date(date_arr[0] + " 0:00:00").getTime() / 1000.0;
                 data_set.edate = new Date(date_arr[1] + " 23:59:59").getTime() / 1000.0;
             }
-            // console.log(data_set);
-
             var a = getTasks(data_set);
-
 
         });
 
@@ -319,7 +317,6 @@
             var searchString = $(this).parent().prev().find('input').val();
 
             list.each(function () {
-                // console.log($(this).text().indexOf(searchString))
                 if ($(this).text().indexOf(searchString) == -1) {
                     $(this).addClass('hidden');
                 } else {
@@ -346,7 +343,7 @@
                     } else {
                         $.MessageBox("Task was not deleted!!!");
                     }
-                })  ;
+                });
 
             }).fail(function () {
 
@@ -372,10 +369,8 @@
             success: function (data) {
                 myVariable = data;
 
-                // console.log(myVariable)
             },
             error: function (xhr, ajaxOptions, thrownError) {
-                // console.log(thrownError)
                 myVariable = false;
             }
 
@@ -420,7 +415,6 @@
         console.log(startLink);
         return startLink;
     }
-
     function getTasks(data) {
         getResp2(data, 'task/list/', function(response){
             var tasks = response;
@@ -429,7 +423,9 @@
                 var res = '';
                 $.each(tasks.list, function (i) {
 
+ 
                     var newDate = (moment(tasks.list[i].ts* 1000)).format('YYYY-MM-DD')+'<br>'+ (moment(tasks.list[i].ts* 1000)).format('HH:mm:ss')
+
                     res += "<li class='task-list-class' id='" + tasks.list[i].id + "' ><span>" + tasks.list[i].id + " -</span><span>" + newDate + "</span></li>";
 
                 });
@@ -439,6 +435,7 @@
         });
 
     }
+
 
 
     $(document).on("click", ".task-list-class", function () {
@@ -581,7 +578,7 @@
     });
 
     $doc.on('click','#refresh',function () {
-       $('#quick-search').click();
+       $('#filter-tasks').click();
     });
     //save button
     $doc.on('click', '#goods .save', function (e) {
@@ -605,7 +602,6 @@
             _table.find('input[name=link]').removeClass('error');
         } else _table.find('input[name=link]').addClass('error');
 
-
         data.js = _table.find('textarea:not(.default)').html();
         data.state = (_table.find('input.switch-input').is(':checked')) ? 1 : 0;
 
@@ -626,6 +622,8 @@
             data.name=Base64.encode(data.name);
             data.js=btoa(data.js);
             data.url=btoa(data.url);
+
+            data.delay=data.amount;
             getResp2(data, url, function(response){
                 var result = response;
 

@@ -20,11 +20,18 @@
                         <span id="current-date"></span> <b class="caret"></b>
                     </div>
                 </div>
-                <div class="columns medium-3 small-5">
+                <div class="columns medium-2 small-4">
                     <select id="categories">
                     </select>
                 </div>
-                <div class="columns medium-4 small-6"><a href="#" id="filter-tasks" class="button filter"><i class="icon-filter"></i>Filter</a><a href="#" id="clear-filters" class="button filter">Clear</a></div>
+                <div class="columns medium-1 small-3">
+                    <select id="state">
+                        <option value="">All</option>
+                        <option value="2">Billet</option>
+                        <option value="-1">Error</option>
+                    </select>
+                </div>
+                <div class="columns medium-4 small-6"><a href="#" id="filter-tasks" class="button filter"><i class="icon-filter"></i>Filter</a><a href="#" id="clear-filters" class="button filter">Clear</a><button id="refresh" class="button btn-success">Refresh</button></div>
                 <div class="columns medium-2 small-3 end"><a href="#" id="goods-page" class="button filter">Goods</a></div>
             </div>
 
@@ -38,9 +45,7 @@
                         <div id="div-for-button-search" class="small-2 columns">
                             <a href="#" id="quick-search" class="button postfix">ok</a>
                         </div>
-                        <div>
-                            <button id="refresh" class="button btn-success">Refresh</button>
-                        </div>
+
                     </div>
                     <div id="task_list">
                         <ul>
