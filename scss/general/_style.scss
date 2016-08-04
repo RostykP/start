@@ -95,7 +95,7 @@
     line-height: 30px;
 }
 .hidden{
-    display: none;
+    display: none !important;
 }
 .clearfix{
     clear: both;
@@ -224,6 +224,7 @@ table thead tr th, table thead tr td {
         text-align: center;
     }
 }
+
 .additionalClass .popupS-buttons, .additionalClassName .popupS-buttons{
     width: 170px;
     margin: 0 auto;

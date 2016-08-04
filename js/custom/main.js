@@ -253,6 +253,7 @@
                         }
                     }
                     $("#categories").html(list);
+                    $( "#filter-tasks" ).trigger( "click" );
                 }
                 //OFFERS
                 var goods_table = $('#goods');
@@ -295,14 +296,22 @@
 
         //filter-tasks
         $('#filter-tasks').click(function (e) {
+            $('#prod-info').html('');
+            $('#product-data-d').html('');
+            $('#status').addClass('hidden');
+            $('#delete_task_id').addClass('hidden');
             e.preventDefault();
             var category = $('#categories').val(),
                 data_cat = (category == 'all') ? '' : category;
-
+            var state = $('#state').val(),
+                data_state = (state == 'all') ? '' : state;
             var data_set = {};
             data_set.sid = $.cookie('sid');
             if (data_cat != '') {
-                data_set.oname = data_cat;
+                data_set.oname = btoa(data_cat);
+            }
+            if (data_state != '') {
+                data_set.state = parseInt(data_state);
             }
             var date_val = $("#current-date").html();
             if (date_val.length > 0) {
@@ -334,10 +343,13 @@
 
         $("#delete_task_id").click(function () {
             $.MessageBox({
-                buttonDone: "Yes",
-                buttonFail: "No",
+                buttonDone: "No",
+                buttonFail: "Yes",
                 message: "Do you want delete this task?"
             }).done(function () {
+
+
+            }).fail(function () {
                 var sid = $.cookie('sid');
                 var id = parseInt(idForDelete);
 
@@ -351,9 +363,6 @@
                         $.MessageBox("Task was not deleted!!!");
                     }
                 });
-
-            }).fail(function () {
-
             });
         });
 
@@ -453,6 +462,10 @@
                     res += "<li class='task-list-class' id='" + tasks.list[i].id + "' ><span>" + tasks.list[i].id + " -</span><span>" + newDate + "</span></li>";
 
                 });
+                if(res!=''){
+                    $('#status').removeClass('hidden');
+                    $('#delete_task_id').removeClass('hidden');
+                }
                 $("#task_list ul").html(res);
                 $(".task-list-class:first").click().addClass('active');
             }
@@ -549,7 +562,6 @@
     $doc.on('click', '#goods .cancel', function (e) {
         var _table = $(this).parents('tr'),
             _td = _table.find('td');
-
         //set previous values
         $.each(_td, function (key, value) {
             var _this = $(this),
@@ -652,7 +664,6 @@
             data.js=btoa(data.js);
             data.url=btoa(data.url);
 
-            // data.delay=data.amount;
             getResp2(data, url, function(response){
                 var result = response;
 
