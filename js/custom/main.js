@@ -331,7 +331,6 @@
             var list = $('#task_list ul li');
             list.removeClass('found');
             var searchString = $(this).parent().prev().find('input').val();
-
             list.each(function () {
                 if ($(this).text().indexOf(searchString) == -1) {
                     $(this).addClass('hidden');
@@ -562,6 +561,9 @@
     $doc.on('click', '#goods .cancel', function (e) {
         var _table = $(this).parents('tr'),
             _td = _table.find('td');
+        if ($(this).parents('tr').hasClass('new')) {
+            $(this).parents('tr').remove();
+        }
         //set previous values
         $.each(_td, function (key, value) {
             var _this = $(this),
