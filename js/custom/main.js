@@ -242,15 +242,31 @@
                 var array_category = response.list;
                 var list = '<option data-id="all" value="all">All categories</option>';
                 var show_country = $('#goods').length ? 0 : 1;
-
+                var bufList = [];
+                var cou=0;
                 if (array_category) {
                     for (var i = 0; i < array_category.length; i++) {
-                        if(show_country){
-                            list += '<option  data-id="' + array_category[i].id + '" value="' + decodeURI(Base64.decode(array_category[i].name))  + '">' + array_category[i].country + ' ' + decodeURI(Base64.decode(array_category[i].name)) + '</option>';
-                        }else{
-                            list += '<option   data-id="' + array_category[i].id + '" value="' + decodeURI(Base64.decode(array_category[i].name))  + '">' + decodeURI(Base64.decode(array_category[i].name)) + '</option>';
-
+                        for (var j = 0; j < bufList.length; j++) {
+                            if(bufList[j]===decodeURI(Base64.decode(array_category[i].name))){
+                                    cou=1;
+                            }
                         }
+                        bufList[i]=decodeURI(Base64.decode(array_category[i].name));
+                        if(cou==0){
+                            if(show_country){
+                                list += '<option  data-id="' + array_category[i].id + '" value="' + decodeURI(Base64.decode(array_category[i].name))  + '">' + array_category[i].country + ' ' + decodeURI(Base64.decode(array_category[i].name)) + '</option>';
+                            }else{
+                                list += '<option   data-id="' + array_category[i].id + '" value="' + decodeURI(Base64.decode(array_category[i].name))  + '">' + decodeURI(Base64.decode(array_category[i].name)) + '</option>';
+                            }
+                        }else{
+                            if(show_country){
+                                list += '<option class="hidden"  data-id="' + array_category[i].id + '" value="' + decodeURI(Base64.decode(array_category[i].name))  + '">' + array_category[i].country + ' ' + decodeURI(Base64.decode(array_category[i].name)) + '</option>';
+                            }else{
+                                list += '<option class="hidden"  data-id="' + array_category[i].id + '" value="' + decodeURI(Base64.decode(array_category[i].name))  + '">' + decodeURI(Base64.decode(array_category[i].name)) + '</option>';
+                            }
+                            cou=0;
+                        }
+
                     }
                     $("#categories").html(list);
                     $( "#filter-tasks" ).trigger( "click" );
