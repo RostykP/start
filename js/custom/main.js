@@ -246,16 +246,21 @@
                 var array_name = [];
 
                 if (array_category) {
+
                     for (var i = 0; i < array_category.length; i++) {
-                        if (!($.inArray(array_category[i].name,array_name))){
-                            if(show_country){
+                        console.log(1111)
+                        if (($.inArray(array_category[i].name,array_name))){
+
+                            if(show_country ){
                                 list += '<option  data-id="' + array_category[i].id + '" value="' + decodeURI(Base64.decode(array_category[i].name))  + '">' + array_category[i].country + ' ' + decodeURI(Base64.decode(array_category[i].name)) + '</option>';
                             }else{
                                 list += '<option   data-id="' + array_category[i].id + '" value="' + decodeURI(Base64.decode(array_category[i].name))  + '">' + decodeURI(Base64.decode(array_category[i].name)) + '</option>';
                             }
+                            array_name.push(array_category[i].name);
                         }else i++;
 
                     }
+
                     $("#categories").html(list);
                     $( "#filter-tasks" ).trigger( "click" );
                 }
