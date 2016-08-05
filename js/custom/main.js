@@ -178,10 +178,7 @@
             getResp2({"login": login, "pass": pass},  'auth/', function(response){
                 var sid = response;
                 if (sid.result === true) {
-                    // $.removeCookie('sid')
                     $.cookie('sid', sid.sid);
-                    // console.log($(location));
-                    // console.log($(location).attr('href'));
                     window.location.href = getStartLink() + 'taskpage.html';
                 } else {
                     $.MessageBox(sid.msg);
