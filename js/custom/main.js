@@ -151,7 +151,7 @@
         $(".fancybox").fancybox();
 
 
-        $("#task-page").click(function () {
+        $('#task-page').click(function () {
             window.location.href = getStartLink() + 'taskpage.html';
         });
         $("#goods-page-from-user").click(function () {
@@ -168,9 +168,8 @@
 
         $('#current-date').html(moment().format("YYYY/MM/D")+" - "+moment().format("YYYY/MM/D"));
         $("#daterange-input").val(moment().format("YYYY/MM/D")+" - "+moment().format("YYYY/MM/D"));
+
         $('#submit').click(function (e) {
-
-
             e.preventDefault();
             var login = $('input[name="login"]').val(),
                 pass = $('input[name="pass"]').val();
@@ -219,7 +218,7 @@
             $('#reportrange span').html(picker.startDate.format('YYYY/MM/DD') + ' - ' + picker.endDate.format('YYYY/MM/DD'));
             $("#daterange-input").val(picker.startDate.format('YYYY/MM/DD') + ' - ' + picker.endDate.format('YYYY/MM/DD'));
         });
-        // console.log($.cookie('sid'));
+
         if ($('#wrapper').length > 0) {
             //get list of tasks
 
@@ -245,7 +244,6 @@
                 if (array_category) {
 
                     for (var i = 0; i < array_category.length; i++) {
-                        console.log(1111)
                         if (($.inArray(array_category[i].name,array_name))){
 
                             if(show_country ){

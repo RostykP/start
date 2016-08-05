@@ -91,9 +91,12 @@
     }
 }
 #task_count{
+    width: 22%;
+    text-align: center;
     position: fixed;
     bottom: 10px;
     left: 10px;
+    font-size: 20px;
 }
 #prod-info{
     font-weight: bold;
