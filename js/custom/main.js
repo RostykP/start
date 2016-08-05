@@ -242,13 +242,19 @@
                 var array_category = response.list;
                 var list = '<option data-id="all" value="all">All categories</option>';
                 var show_country = $('#goods').length ? 0 : 1;
+
+                var array_name = [];
+
                 if (array_category) {
                     for (var i = 0; i < array_category.length; i++) {
+                        if (!($.inArray(array_category[i].name,array_name))){
                             if(show_country){
                                 list += '<option  data-id="' + array_category[i].id + '" value="' + decodeURI(Base64.decode(array_category[i].name))  + '">' + array_category[i].country + ' ' + decodeURI(Base64.decode(array_category[i].name)) + '</option>';
                             }else{
                                 list += '<option   data-id="' + array_category[i].id + '" value="' + decodeURI(Base64.decode(array_category[i].name))  + '">' + decodeURI(Base64.decode(array_category[i].name)) + '</option>';
                             }
+                        }else i++;
+
                     }
                     $("#categories").html(list);
                     $( "#filter-tasks" ).trigger( "click" );
