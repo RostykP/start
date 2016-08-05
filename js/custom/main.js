@@ -500,6 +500,7 @@
                 }
                 $("#task_list ul").html(res);
                 $(".task-list-class:first").click().addClass('active');
+                $('#task_count').html($('#task_list ul li').length);
             }
         });
 
