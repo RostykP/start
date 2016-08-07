@@ -291,3 +291,16 @@ table thead tr th, table thead tr td {
     margin-left: 10px;
     margin-right: 10px;
 }
+
+body.deletePop {
+    .popupS-content,#popupS-overlay+div{
+        width: 100% !important;
+        max-width: 430px !important;
+    }
+}
+body.detailjs{
+    .popupS-content,#popupS-overlay+div{
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+}

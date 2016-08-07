@@ -14,7 +14,7 @@
         _keyStr: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
 
 
-        encode: function(input) {
+        encode: function (input) {
             var output = "";
             var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
             var i = 0;
@@ -45,7 +45,7 @@
         },
 
 
-        decode: function(input) {
+        decode: function (input) {
             var output = "";
             var chr1, chr2, chr3;
             var enc1, enc2, enc3, enc4;
@@ -82,7 +82,7 @@
 
         },
 
-        _utf8_encode: function(string) {
+        _utf8_encode: function (string) {
             string = string.replace(/\r\n/g, "\n");
             var utftext = "";
 
@@ -108,13 +108,13 @@
             return utftext;
         },
 
-        _utf8_decode: function(utftext) {
+        _utf8_decode: function (utftext) {
             var string = "";
             var i = 0;
-            var c =0;
+            var c = 0;
             var c1 = 0;
-            var c2=0;
-            var c3=0;
+            var c2 = 0;
+            var c3 = 0;
             while (i < utftext.length) {
 
                 c = utftext.charCodeAt(i);
@@ -143,9 +143,6 @@
     }
 
 
-
-
-
     $doc.ready(function (jQuery) {
 
         $(".fancybox").fancybox();
@@ -166,15 +163,15 @@
         });
 
 
-        $('#current-date').html(moment().format("YYYY/MM/D")+" - "+moment().format("YYYY/MM/D"));
-        $("#daterange-input").val(moment().format("YYYY/MM/D")+" - "+moment().format("YYYY/MM/D"));
+        $('#current-date').html(moment().format("YYYY/MM/D") + " - " + moment().format("YYYY/MM/D"));
+        $("#daterange-input").val(moment().format("YYYY/MM/D") + " - " + moment().format("YYYY/MM/D"));
 
         $('#submit').click(function (e) {
             e.preventDefault();
             var login = $('input[name="login"]').val(),
                 pass = $('input[name="pass"]').val();
 
-            getResp2({"login": login, "pass": pass},  'auth/', function(response){
+            getResp2({"login": login, "pass": pass}, 'auth/', function (response) {
                 var sid = response;
                 if (sid.result === true) {
                     $.cookie('sid', sid.sid);
@@ -214,7 +211,7 @@
             startDate = start.format('YYYY/MM/D');
             endDate = end.format('YYYY/MM/D');
         });
-        $('#reportrange').on('cancel.daterangepicker', function(ev, picker) {
+        $('#reportrange').on('cancel.daterangepicker', function (ev, picker) {
             $('#reportrange span').html(picker.startDate.format('YYYY/MM/DD') + ' - ' + picker.endDate.format('YYYY/MM/DD'));
             $("#daterange-input").val(picker.startDate.format('YYYY/MM/DD') + ' - ' + picker.endDate.format('YYYY/MM/DD'));
         });
@@ -222,47 +219,41 @@
         if ($('#wrapper').length > 0) {
             //get list of tasks
 
-            $( "#filter-tasks" ).trigger( "click" );
+            $("#filter-tasks").trigger("click");
             //getTasks({"sid": $.cookie('sid')});
         }
         $(document).on("click", "#clear-filters", function () {
             $("#categories").val('all');
             $('#reportrange span').html(moment().format('YYYY/MM/DD') + ' - ' + moment().format('YYYY/MM/DD'));
             $("#daterange-input").val(moment().format('YYYY/MM/DD') + '-' + moment().format('YYYY/MM/DD'));
-            $( "#filter-tasks" ).trigger( "click" );
+            $("#filter-tasks").trigger("click");
         })
         if ($('#wrapper').length > 0) {
             //get list of categories
 
-            getResp2({"sid": $.cookie('sid')}, 'offer/list/', function(response){
+            getResp2({"sid": $.cookie('sid')}, 'offer/list/', function (response) {
                 var array_category = response.list;
                 var list = '<option data-id="all" value="all">All categories</option>';
                 var show_country = $('#goods').length ? 0 : 1;
                 var add_st = list;
                 var array_name = [];
-
                 if (array_category) {
 
                     for (var i = 0; i < array_category.length; i++) {
+                        if (show_country == 0) {
 
-                        if (($.inArray(array_category[i].name,array_name))){
+                            list += '<option  data-id="' + array_category[i].id + '" value="' + decodeURI(Base64.decode(array_category[i].name)) + '">' + array_category[i].country + ' ' + decodeURI(Base64.decode(array_category[i].name)) + '</option>';
+                        } else {
 
-                            if(show_country  ){
+                            list += '<option   data-id="' + array_category[i].id + '" value="' + decodeURI(Base64.decode(array_category[i].name)) + '">' + decodeURI(Base64.decode(array_category[i].name)) + '</option>';
+                        }
 
-                                list += '<option  data-id="' + array_category[i].id + '" value="' + decodeURI(Base64.decode(array_category[i].name))  + '">' + array_category[i].country + ' ' + decodeURI(Base64.decode(array_category[i].name)) + '</option>';
-                            }else{
-
-                                list += '<option   data-id="' + array_category[i].id + '" value="' + decodeURI(Base64.decode(array_category[i].name))  + '">' + decodeURI(Base64.decode(array_category[i].name)) + '</option>';
-                            }
-                            array_name.push(array_category[i].name);
-                        }else i++;
-
-                        add_st += '<option  data-id="' + array_category[i].id + '" value="' + decodeURI(Base64.decode(array_category[i].name))  + '">' + array_category[i].country + ' ' + decodeURI(Base64.decode(array_category[i].name)) + '</option>';
                     }
 
                     $("#categories").html(list);
-                    $( "#filter-tasks" ).trigger( "click" );
+                    $("#filter-tasks").trigger("click");
                 }
+
                 //OFFERS
                 var goods_table = $('#goods');
                 if (goods_table.length > 0) {
@@ -270,15 +261,20 @@
                         selected = "selected ";
 
                     $.each(array_category, function (key, value) {
+
+                        // console.log(decodeURI(Base64.decode(value.name)))
                         var position = list.indexOf('data-id="' + value.id + '"'),
-                            output = [list.slice(0, position), selected, list.slice(position)].join(''),
                             status = value.state == 1 ? 'checked' : '';
+
+                        var output = [list.slice(0, position), selected, list.slice(position)].join('');
+
+
                         table += '<tr data-cat-id="' + value.id + '">' +
                             '<td>' + (key + 1) + '</td>' + // №
                             '<td><select disabled data-current = "' + value.id + '">' + output + '</select></td>' + // Category
-                            '<td><input data-current="' +  Base64.decode(value.url) + '" name="link" value="' +  Base64.decode(value.url) + '" type="text" disabled> </td>' + // URL
+                            '<td><input data-current="' + Base64.decode(value.url) + '" name="link" value="' + Base64.decode(value.url) + '" type="text" disabled> </td>' + // URL
                             '<td><input data-current="' + value.country + '" name="country" type="text" value="' + value.country + '" disabled></td>' + // Country
-                            '<td class="js-code"><input type="text" onfocus="this.blur()" onkeydown="return false;"   value="JS code" disabled><textarea class="hidden">'+ Base64.decode(value.js)+'</textarea><textarea class="hidden default">'+ Base64.decode(value.js)+'</textarea></td>' + // JS code
+                            '<td class="js-code"><input type="text" onfocus="this.blur()" onkeydown="return false;"   value="JS code" disabled><textarea class="hidden">' + Base64.decode(value.js) + '</textarea><textarea class="hidden default">' + Base64.decode(value.js) + '</textarea></td>' + // JS code
                             '<td><input data-current="' + value.amount + '" type="number" min="1" name="amount" value="' + value.amount + '" disabled></td>' + // Amount
                             '<td><input data-current="' + value.delay + '" type="number" min="1" name="delay" value="' + value.delay + '" disabled></td>' + // Delay
                             '<td class="status"><div class="switch"><input data-current="' + value.state + '" disabled class="switch-input" id="status-' + value.id + '" type="checkbox" ' + status + ' name="status"><label class="switch-paddle" for="status-' + value.id + '"></label></div></td>' + // Status
@@ -360,7 +356,7 @@
                 var sid = $.cookie('sid');
                 var id = parseInt(idForDelete);
 
-                getResp2({"sid": sid, "id": id}, 'task/delete/', function(response){
+                getResp2({"sid": sid, "id": id}, 'task/delete/', function (response) {
                     var deleted = response;
                     // // console.log(deleted);
                     if (deleted.result === true) {
@@ -391,29 +387,26 @@
         // }
 
 
-
-
         $window.trigger('resize');
-
 
     });
 
-    $(window).keydown(function(e){
+    $(window).keydown(function (e) {
         var li = $('#task_list li.active');
 
-        if(e.keyCode === 38) {
+        if (e.keyCode === 38) {
             // up
-            if(li.prev().length){
+            if (li.prev().length) {
                 li.removeClass('active').prev().addClass('active');
             }
         }
-        else if(e.keyCode === 40) {
+        else if (e.keyCode === 40) {
 
             // down
-            if(li.next().length){
+            if (li.next().length) {
                 li.removeClass('active').next().addClass('active');
             }
-        }else if(e.keyCode ===13){
+        } else if (e.keyCode === 13) {
             li.click();
         }
 
@@ -479,8 +472,9 @@
         console.log(startLink);
         return startLink;
     }
+
     function getTasks(data) {
-        getResp2(data, 'task/list/', function(response){
+        getResp2(data, 'task/list/', function (response) {
             var tasks = response;
             if (tasks) {
 
@@ -488,12 +482,12 @@
                 $.each(tasks.list, function (i) {
 
 
-                    var newDate = (moment(tasks.list[i].ts* 1000)).format('YYYY-MM-DD')+'<br>'+ (moment(tasks.list[i].ts* 1000)).format('HH:mm:ss')
+                    var newDate = (moment(tasks.list[i].ts * 1000)).format('YYYY-MM-DD') + '<br>' + (moment(tasks.list[i].ts * 1000)).format('HH:mm:ss')
 
                     res += "<li class='task-list-class' id='" + tasks.list[i].id + "' ><span>" + tasks.list[i].id + " -</span><span>" + newDate + "</span></li>";
 
                 });
-                if(res!=''){
+                if (res != '') {
                     $('#status').removeClass('hidden');
                     $('#delete_task_id').removeClass('hidden');
                 }
@@ -506,7 +500,6 @@
     }
 
 
-
     $(document).on("click", ".task-list-class", function () {
         $('.task-list-class').removeClass('active');
 
@@ -516,7 +509,7 @@
         $(this).addClass('active');
 
 
-        getResp2({"sid": $.cookie('sid'), "id": parseInt(id)}, 'task/get/', function(response){
+        getResp2({"sid": $.cookie('sid'), "id": parseInt(id)}, 'task/get/', function (response) {
             var a = response;
             idForDelete = id;
             console.log(idForDelete);
@@ -531,7 +524,6 @@
 
             $(this).addClass('active');
         });
-
 
 
     });
@@ -554,22 +546,24 @@
     $doc.on('click', '.js-code input:not(:disabled)', function (e) {
         var textarea = $(this).parent().find("textarea:not(.default)");
         var editor;
+        $('body').addClass('detailjs').removeClass('deletePop');
+
         popupS.confirm({
             mode: 'modal',
             title: 'Detail JS',
-            content: '<div><textarea id="editor" name="js" width="90%">'+$(textarea).html()+'</textarea> </div>',
-            additionalOverlayClass:'textarea-pop',
+            content: '<div><textarea id="editor" name="js" width="90%">' + $(textarea).html() + '</textarea> </div>',
+            additionalOverlayClass: 'textarea-pop',
             className: 'additionalClass',  // for additional styling, gets append on every popup div
             placeholder: 'Input Text',     // only available for mode: 'prompt'
             flagCloseByEsc: false,
             flagCloseByOverlay: false,
             labelCancel: 'Cancel',
-            labelOk:     'OK',
+            labelOk: 'OK',
             onOpen: function () {
                 var myTextarea = document.getElementById("editor");
                 editor = CodeMirror.fromTextArea(myTextarea, {
                     lineNumbers: true,
-                    mode:  "javascript"
+                    mode: "javascript"
                 });
             },      // gets called when popup is opened
             onSubmit: function (val) {
@@ -610,14 +604,14 @@
                 } else if ((!(_input.is(':checked')) && _input.attr('data-current') == "1") || ((_input.is(':checked')) && _input.attr('data-current') == "0")) { // set default status of input switch
                     _input.click();
                 }
-            } else if(_select.length > 0){
+            } else if (_select.length > 0) {
                 if (_select.attr('data-id') != _select.attr('data-current')) {
                     _select.find('option[data-id=' + _select.attr('data-current') + ']').attr("selected", "selected");
                     var sel = _select.find('option[data-id=' + _select.attr('data-current') + ']').text();
                     _select.next().find('.select2-selection__rendered').html(sel)
                 }
-            }else{
-                if(_textarea.html() != _textarea.next().html()){
+            } else {
+                if (_textarea.html() != _textarea.next().html()) {
                     _textarea.html(_textarea.next().html());
                 }
             }
@@ -631,8 +625,10 @@
     $doc.on('click', '#goods .delete', function (e) {
         var _table = $(this).parents('tr');
 
+        $('body').addClass('deletePop').removeClass('detailjs');
+
         popupS.confirm({
-            className: 'additionalClassName',
+            additionalBaseClass:'deletePop',
             content: 'Do you want to delete a current category?',
             onSubmit: function () {
                 _table.remove();
@@ -640,7 +636,7 @@
                 getResp2({
                     'sid': $.cookie('sid'),
                     'id': parseInt(_table.attr('data-cat-id'))
-                }, 'offer/delete/', function(response){
+                }, 'offer/delete/', function (response) {
 
                 });
 
@@ -648,8 +644,8 @@
         });
     });
 
-    $doc.on('click','#refresh',function () {
-       $('#filter-tasks').click();
+    $doc.on('click', '#refresh', function () {
+        $('#filter-tasks').click();
     });
     //save button
     $doc.on('click', '#goods .save', function (e) {
@@ -695,11 +691,11 @@
                 action = 0;
                 delete data.id; //remove id if new one
             }
-            data.name=Base64.encode(data.name);
-            data.js=btoa(data.js);
-            data.url=btoa(data.url);
+            data.name = Base64.encode(data.name);
+            data.js = btoa(data.js);
+            data.url = btoa(data.url);
 
-            getResp2(data, url, function(response){
+            getResp2(data, url, function (response) {
                 var result = response;
 
                 if (result.result === true && action == 1) { //if update successful
@@ -713,7 +709,7 @@
                     });
                     _table.removeClass('new'); //remove new Classname if there was a new category
 
-                    var current_id =  result.id;
+                    var current_id = result.id;
 
                     $.each(_td, function (key, value) {
                         //if input
@@ -722,11 +718,11 @@
                             _textarea = $(this).find('textarea:not(.default)');
 
                         if (_input.length > 0) {
-                            if (_input.attr('type') != 'checkbox' && _input.next('textarea').length==0) {
+                            if (_input.attr('type') != 'checkbox' && _input.next('textarea').length == 0) {
                                 _input.attr('data-current', _input.val());
-                            }else if(_textarea.length > 0){
+                            } else if (_textarea.length > 0) {
                                 _textarea.next().html(_textarea.html());
-                            }else {
+                            } else {
                                 var status = _input.is(':checked') ? 1 : 0;
                                 _input.attr('data-current', status);
                             }
@@ -743,7 +739,6 @@
 
                 }
             });
-
 
 
         }
@@ -816,41 +811,41 @@
         _table.find('tbody tr:gt(' + (show_on_page - 1) + ')').hide();
 
         for (var i = 1; i <= pages; i++) {
-            if(i == 1){
-                list += '<li class="current"><a href="#">'+i+'</a></li>';
-            }else  list += '<li><a href="#">'+i+'</a></li>';
+            if (i == 1) {
+                list += '<li class="current"><a href="#">' + i + '</a></li>';
+            } else  list += '<li><a href="#">' + i + '</a></li>';
         }
-        pagination.attr('per-page',show_on_page);
+        pagination.attr('per-page', show_on_page);
 
-        if(pages > 1){
+        if (pages > 1) {
             pagination.html(list);
 
-        }else  pagination.html('');
+        } else  pagination.html('');
 
 
     });
 
-    $doc.on('click','#pagination li a',function (e) {
+    $doc.on('click', '#pagination li a', function (e) {
         e.preventDefault();
 
         var _table = $('#goods'),
             _tr = _table.find('tbody tr'),
             show_on_page = parseInt($(this).parents('ul').attr('per-page')),
             current = parseInt($(this).text()),
-            gt=0,
+            gt = 0,
             lt = 0;
 
         $(this).parents('ul').find('.current').removeClass('current');
         $(this).parent().addClass('current');
 
-        if(current == 1){
-            lt =  show_on_page;
-        }else{
-            gt = (current-1)*show_on_page;
-            lt = current*show_on_page;
+        if (current == 1) {
+            lt = show_on_page;
+        } else {
+            gt = (current - 1) * show_on_page;
+            lt = current * show_on_page;
         }
         _tr.hide();
-        _table.find('tbody tr').slice(gt,lt).show();
+        _table.find('tbody tr').slice(gt, lt).show();
 
 
     });
@@ -872,6 +867,19 @@
     }
 
     function callSelect(el) {
+        // el.find('select').each(function () {
+        //     var usedNames = {};
+        //
+        //     $(this).find('option').each(function (i, v) {
+        //         if (usedNames[this.text]) {
+        //             $(this).data('data-hide="1"');
+        //
+        //         } else {
+        //             usedNames[this.text] = $(this).attr('data-id');
+        //         }
+        //     });
+        // });
+
         el.find('select').select2({
             tags: true
         });
@@ -928,7 +936,7 @@
     });
 
 
-    function getResp2(data,url, callback){
+    function getResp2(data, url, callback) {
         $('body').addClass('loading');
         $.ajax({
             type: "POST",
@@ -945,7 +953,7 @@
                 else {
                     if (data.result === false && (data.msg).indexOf('invalid session') == -1) {
                         callback(data);
-                    } else  {
+                    } else {
                         $.removeCookie('sid');
                         $.removeCookie('domain');
                         window.location.href = getStartLink();
