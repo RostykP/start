@@ -70,8 +70,8 @@
 <script>
     $(document).ready(function () {
         var referrer = document.referrer;
-        if (!referrer) referrer = $.cookie('referrer');
-        if ((referrer.indexOf('taskpage') === -1) && (referrer.indexOf('users') === -1) && (referrer.indexOf('goods') === -1)) {
+        if (!referrer ) referrer = $.cookie('referrer');
+        if ((referrer!=undefined) && (referrer.indexOf('taskpage') === -1) && (referrer.indexOf('users') === -1) && (referrer.indexOf('goods') === -1)) {
             var link = $(location).attr('href');
             var linkArr = link.split("//");
             var linkArr2 = linkArr[1].split("/");

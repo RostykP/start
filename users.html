@@ -48,7 +48,7 @@
     $(document).ready(function () {
         var referrer = document.referrer;
         if (!referrer) referrer = $.cookie('referrer');
-    if(referrer.indexOf('goods') === -1 && (referrer.indexOf('users') === -1)){
+    if((referrer!=undefined) && (referrer.indexOf('goods') === -1) && (referrer.indexOf('users') === -1)){
         var link = $(location).attr('href');
         var linkArr = link.split("//");
         var linkArr2 = linkArr[1].split("/");
