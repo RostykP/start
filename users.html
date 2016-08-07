@@ -45,7 +45,10 @@
 <script type="text/javascript" src="js/jquery.min.js"></script>
 <script>
     console.log(document.referrer);
-    if(document.referrer.indexOf('goods') === -1){
+    $(document).ready(function () {
+        var referrer = document.referrer;
+        if (!referrer) referrer = $.cookie('referrer');
+    if(referrer.indexOf('goods') === -1 && (referrer.indexOf('users') === -1)){
         var link = $(location).attr('href');
         var linkArr = link.split("//");
         var linkArr2 = linkArr[1].split("/");
@@ -57,6 +60,8 @@
         console.log(startLink);
         window.location.href = startLink;
     }
+        $.cookie('referrer', window.location.href);
+    });
 </script>
 <script type="text/javascript" src="js/main.min.js"></script>
 <script type="text/javascript" src="js/messagebox.min.js"></script>

@@ -68,18 +68,23 @@
 <div id="load"><img src="./assets/img/loading.gif"/></div>
 <script type="text/javascript" src="js/jquery.min.js"></script>
 <script>
-    if ((document.referrer.indexOf('taskpage') === -1) && (document.referrer.indexOf('users') === -1)) {
-        var link = $(location).attr('href');
-        var linkArr = link.split("//");
-        var linkArr2 = linkArr[1].split("/");
-        var length = linkArr2.length;
-        var startLink = "http://";
-        for (var i = 0; i < (length - 1); i++) {
-            startLink = startLink + linkArr2[i] + "/";
+    $(document).ready(function () {
+        var referrer = document.referrer;
+        if (!referrer) referrer = $.cookie('referrer');
+        if ((referrer.indexOf('taskpage') === -1) && (referrer.indexOf('users') === -1) && (referrer.indexOf('goods') === -1)) {
+            var link = $(location).attr('href');
+            var linkArr = link.split("//");
+            var linkArr2 = linkArr[1].split("/");
+            var length = linkArr2.length;
+            var startLink = "http://";
+            for (var i = 0; i < (length - 1); i++) {
+                startLink = startLink + linkArr2[i] + "/";
+            }
+            console.log(startLink);
+            window.location.href = startLink;
         }
-        console.log(startLink);
-        window.location.href = startLink;
-    }
+        $.cookie('referrer', window.location.href);
+    });
 </script>
 <script type="text/javascript" src="js/codemirror/codemirror.js"></script>
 <script type="text/javascript" src="js/codemirror/javascript.js"></script>
