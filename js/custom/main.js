@@ -327,22 +327,7 @@
 
         });
 
-        //qiuck search
-        $('#quick-search').click(function (e) {
-            getTasks({"sid": $.cookie('sid')});
-            e.preventDefault();
 
-            var list = $('#task_list ul li');
-            list.removeClass('found');
-            var searchString = $(this).parent().prev().find('input').val();
-            list.each(function () {
-                if ($(this).text().indexOf(searchString) == -1) {
-                    $(this).addClass('hidden');
-                } else {
-                    $(this).removeClass('hidden');
-                }
-            });
-        });
 
         $("#delete_task_id").click(function () {
             $.MessageBox({
@@ -794,6 +779,32 @@
     //check if were changes in table
     $doc.on('keypress change', '#goods input, #goods select', function (e) {
         $(this).parents('tr').addClass('were-edit');
+    });
+
+    //qiuck search
+    $doc.on('click','#quick-search', function (e) {
+        e.preventDefault();
+
+        var searchString = $(this).parent().prev().find('input').val();
+        if(searchString == ''){
+            getTasks({"sid": $.cookie('sid')});
+
+        }else{
+            var list = $('#task_list ul li');
+            list.removeClass('found');
+
+            list.each(function () {
+
+                if ($(this).text().indexOf(searchString) == -1) {
+                    $(this).addClass('hidden');
+                } else {
+                    $(this).removeClass('hidden');
+                }
+
+            });
+        }
+
+
     });
 
 
