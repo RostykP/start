@@ -151,7 +151,7 @@
         $(".fancybox").fancybox();
 
 
-        $("#task-page").click(function () {
+        $('#task-page').click(function () {
             window.location.href = getStartLink() + 'taskpage.html';
         });
         $("#goods-page-from-user").click(function () {
@@ -168,9 +168,8 @@
 
         $('#current-date').html(moment().format("YYYY/MM/D")+" - "+moment().format("YYYY/MM/D"));
         $("#daterange-input").val(moment().format("YYYY/MM/D")+" - "+moment().format("YYYY/MM/D"));
+
         $('#submit').click(function (e) {
-
-
             e.preventDefault();
             var login = $('input[name="login"]').val(),
                 pass = $('input[name="pass"]').val();
@@ -178,10 +177,7 @@
             getResp2({"login": login, "pass": pass},  'auth/', function(response){
                 var sid = response;
                 if (sid.result === true) {
-                    // $.removeCookie('sid')
                     $.cookie('sid', sid.sid);
-                    // console.log($(location));
-                    // console.log($(location).attr('href'));
                     window.location.href = getStartLink() + 'taskpage.html';
                 } else {
                     $.MessageBox(sid.msg);
@@ -222,7 +218,7 @@
             $('#reportrange span').html(picker.startDate.format('YYYY/MM/DD') + ' - ' + picker.endDate.format('YYYY/MM/DD'));
             $("#daterange-input").val(picker.startDate.format('YYYY/MM/DD') + ' - ' + picker.endDate.format('YYYY/MM/DD'));
         });
-        // console.log($.cookie('sid'));
+
         if ($('#wrapper').length > 0) {
             //get list of tasks
 
@@ -503,6 +499,7 @@
                 }
                 $("#task_list ul").html(res);
                 $(".task-list-class:first").click().addClass('active');
+                $('#task_count').html($('#task_list ul li').length);
             }
         });
 
