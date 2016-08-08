@@ -301,15 +301,16 @@
                     });
 
                     goods_table.find('tbody').html(table);
-                    callSelect(goods_table);
+
                     for (var i = 0; i < cat_list.length; i++) {
                         if(cat_list[i]!=undefined){
-                            $('#goods tr[data-cat-id='+i+'] select option[value='+cat_list[i]+']').attr('selected', true);
+                            $('#goods tr[data-cat-id='+i+'] select option[value="'+cat_list[i]+'"]').attr('selected', true).prop('selected',true);
                            //$('#goods tr[data-cat-id='+i+'] select .select2-selection__rendered').html(cat_list[i]);
                         }
                     }
                     //trigger change
                     $('#per-page').change();
+                    callSelect(goods_table);
 
                 }
 
@@ -635,6 +636,7 @@
 
         popupS.confirm({
             additionalBaseClass:'deletePop',
+            className : 'additionalClass',
             content: 'Do you want to delete a current category?',
             onSubmit: function () {
                 _table.remove();
