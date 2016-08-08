@@ -235,19 +235,36 @@
                 var array_category = response.list;
                 var list = '<option data-id="all" value="all">All categories</option>';
                 var show_country = $('#goods').length ? 0 : 1;
-                var add_st = list;
-                var array_name = [];
+                var bufList = [];
+                var cat_list = [];
+                var cou=0;
                 if (array_category) {
 
                     for (var i = 0; i < array_category.length; i++) {
-                        if (show_country == 0) {
-
-                            list += '<option  data-id="' + array_category[i].id + '" value="' + decodeURI(Base64.decode(array_category[i].name)) + '">' + array_category[i].country + ' ' + decodeURI(Base64.decode(array_category[i].name)) + '</option>';
+                        for (var j = 0; j < bufList.length; j++) {
+                            if (bufList[j] === decodeURI(Base64.decode(array_category[i].name))) {
+                                cou = 1;
+                            }
+                        }
+                        bufList[i] = decodeURI(Base64.decode(array_category[i].name));
+                        if (cou == 0) {
+                            if (show_country) {
+                                list += '<option  data-id="' + array_category[i].id + '" value="' + decodeURI(Base64.decode(array_category[i].name)) + '">' + array_category[i].country + ' ' + decodeURI(Base64.decode(array_category[i].name)) + '</option>';
+                            } else {
+                                list += '<option   data-id="' + array_category[i].id + '" value="' + decodeURI(Base64.decode(array_category[i].name)) + '">' + decodeURI(Base64.decode(array_category[i].name)) + '</option>';
+                            }
                         } else {
 
-                            list += '<option   data-id="' + array_category[i].id + '" value="' + decodeURI(Base64.decode(array_category[i].name)) + '">' + decodeURI(Base64.decode(array_category[i].name)) + '</option>';
-                        }
+                            cat_list[array_category[i].id] = decodeURI(Base64.decode(array_category[i].name));
+                            //if (show_country) {
 
+                               // list += '<option  data-id="' + array_category[i].id + '" value="' + decodeURI(Base64.decode(array_category[i].name)) + '">' + array_category[i].country + ' ' + decodeURI(Base64.decode(array_category[i].name)) + '</option>';
+                            //} else {
+
+                                //list += '<option   data-id="' + array_category[i].id + '" value="' + decodeURI(Base64.decode(array_category[i].name)) + '">' + decodeURI(Base64.decode(array_category[i].name)) + '</option>';
+                            //}
+                            cou = 0;
+                        }
                     }
 
                     $("#categories").html(list);
@@ -262,7 +279,6 @@
 
                     $.each(array_category, function (key, value) {
 
-                        // console.log(decodeURI(Base64.decode(value.name)))
                         var position = list.indexOf('data-id="' + value.id + '"'),
                             status = value.state == 1 ? 'checked' : '';
 
@@ -286,7 +302,12 @@
 
                     goods_table.find('tbody').html(table);
                     callSelect(goods_table);
-
+                    for (var i = 0; i < cat_list.length; i++) {
+                        if(cat_list[i]!=undefined){
+                            $('#goods tr[data-cat-id='+i+'] select option[value='+cat_list[i]+']').attr('selected', true);
+                           //$('#goods tr[data-cat-id='+i+'] select .select2-selection__rendered').html(cat_list[i]);
+                        }
+                    }
                     //trigger change
                     $('#per-page').change();
 
